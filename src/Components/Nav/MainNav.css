@@ -1,0 +1,26 @@
+.nav-header {
+    height: 4rem;
+    padding: 1.5rem;
+    background-color: #fcd5ce;
+    margin-bottom: 1rem;
+}
+
+.nav-content {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem auto 0;
+    align-items: baseline;
+    width: 90%;
+}
+
+.nav-content ul {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    align-items: baseline;
+}
+
+.nav-content li {
+    margin: 0 1rem;
+}
