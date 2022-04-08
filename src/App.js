@@ -12,7 +12,6 @@ function App() {
     { id: "post1", user: { name: "Chris McGhee", email: "test4@test"}, content: "This is Ballin C's test post", date: "placeholder for date text"}
   ]
 
-
   return (
     <div className="App">
       
