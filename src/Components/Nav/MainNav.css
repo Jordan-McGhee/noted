@@ -9,7 +9,7 @@
     display: flex;
     justify-content: space-between;
     margin: 2rem auto 0;
-    align-items: baseline;
+    align-items: center;
     width: 90%;
 }
 
@@ -18,9 +18,26 @@
     margin: 0px;
     padding: 0px;
     display: flex;
-    align-items: baseline;
+    align-items: center;
+    border: 1px solid red;
+}
+
+.nav-content li:last-child {
+    margin: 0px;
 }
 
 .nav-content li {
     margin: 0 1rem;
+    border: 1px solid red;
+    font-size: larger;
+}
+
+.user-nav {
+    display: flex;
+    align-items: center;
+}
+
+.user-nav img {
+    width: 1.5rem;
+    margin-right: .35rem;
 }

@@ -1,4 +1,5 @@
 import "./MainNav.css"
+import userIcon from "../../Icons/user-placeholder.png"
 
 const MainNav = () => {
     return (
@@ -14,8 +15,9 @@ const MainNav = () => {
 
                     <ul>
 
-                        <li>
-                            User
+                        <li className="user-nav">
+                            <img src = { userIcon } alt="user icon" />
+                            <p>User</p>
                         </li>
 
                         <li>

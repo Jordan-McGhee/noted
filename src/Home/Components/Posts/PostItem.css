@@ -1,7 +1,48 @@
-.name-date-section h3 {
+.post-name-date-section h3 {
     margin-bottom: .25rem;
 }
 
-.name-date-section h6 {
+.post-name-date-section h6 {
     margin-bottom: .5rem;
+}
+
+.post-name-date-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.post-name-date-section img {
+    width: 3rem;
+    margin-right: .75rem;
+}
+
+.post-name-date-section p {
+    font-size: small;
+}
+
+.post-likes-comments {
+    display: flex;
+
+}
+
+.post-likes-comments img {
+    width: 1.25rem;
+}
+
+.post-likes {
+    display: flex;
+    width: fit-content;
+    border: 1px solid red;
+}
+
+.post-comments {
+    display: flex;
+    width: fit-content;
+    border: 1px solid red;
+}
+
+.post-view-comments {
+    width: fit-content;
+    border: 1px solid red;
 }
