@@ -26,7 +26,9 @@ function App() {
         <div className='app-friends-section'>
 
         </div>
+
       </div>
+      
     </div>
   );
 }
