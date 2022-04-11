@@ -12,3 +12,9 @@
 .app-posts-section {
   width: 75%;
 }
+
+.vertical-line {
+  margin-left: 1rem;
+  border-left: 1px solid #121212;
+  height: 55rem;
+}

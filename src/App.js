@@ -23,6 +23,8 @@ function App() {
           <PostList items = { DUMMY_POSTS } />
         </div>
 
+        <div className='vertical-line'></div>
+
         <div className='app-friends-section'>
 
         </div>
