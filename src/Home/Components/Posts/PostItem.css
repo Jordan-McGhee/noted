@@ -23,26 +23,30 @@
 
 .post-likes-comments {
     display: flex;
-
+    justify-content: space-between;
+    width: 30%;
+    margin-top: 1rem;
+    /* border: 1px solid red; */
 }
 
 .post-likes-comments img {
     width: 1.25rem;
+    margin-right: .35rem;
 }
 
 .post-likes {
     display: flex;
     width: fit-content;
-    border: 1px solid red;
+    /* border: 1px solid red; */
 }
 
 .post-comments {
     display: flex;
     width: fit-content;
-    border: 1px solid red;
+    /* border: 1px solid red; */
 }
 
 .post-view-comments {
     width: fit-content;
-    border: 1px solid red;
+    /* border: 1px solid red; */
 }
