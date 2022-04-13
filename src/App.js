@@ -32,13 +32,13 @@ function App() {
 
         <div className='app-posts-section'>
           <NewPost />
-          <PostList items = { DUMMY_POSTS.reverse() } />
+          <PostList items={ DUMMY_POSTS.reverse() } />
         </div>
 
         <div className='vertical-line'></div>
 
         <div className='app-friends-section'>
-          <FriendList items = { DUMMY_FRIENDS } />
+          <FriendList items={ DUMMY_FRIENDS } />
         </div>
 
       </div>

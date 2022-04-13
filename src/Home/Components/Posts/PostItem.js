@@ -8,13 +8,13 @@ import "./PostItem.css"
 
 const PostItem = props => {
     return (
-        <Card className = "post-card">
+        <Card className="post-card">
 
             <div>
 
                 <div className="post-name-date-section">
                     
-                    <img src = { userIcon } alt="user icon" />
+                    <img src={ userIcon } alt="user icon" />
 
                     <div className="user-info">
                         <h3>{ props.user.name }</h3>
@@ -31,12 +31,12 @@ const PostItem = props => {
                 <div className="post-likes-comments">
                     
                     <div className="post-likes">
-                        <img src= { heartIcon } alt="heart icon" />
+                        <img src={ heartIcon } alt="heart icon" />
                         <p>31</p>
                     </div>
 
                     <div className="post-comments">
-                        <img src= { commentIcon } alt="comment icon" />
+                        <img src={ commentIcon } alt="comment icon" />
                         <p>12</p>
                     </div>
 

@@ -18,7 +18,7 @@ const MainNav = () => {
                     <ul>
 
                         <li className="user-nav">
-                            <img src = { userIcon } alt="user icon" />
+                            <img src={ userIcon } alt="user icon" />
                             <p>User</p>
                         </li>
 

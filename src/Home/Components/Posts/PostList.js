@@ -8,10 +8,10 @@ const PostList = props => {
         <ul>
             { props.items.map((item) => (
                 <PostItem
-                    key = { item.id }
-                    user = { item.user }
-                    content = { item.content }
-                    date = { item.date }
+                    key={ item.id }
+                    user={ item.user }
+                    content={ item.content }
+                    date={ item.date }
                 />
             ))}
         </ul>
