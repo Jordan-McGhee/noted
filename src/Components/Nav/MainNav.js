@@ -20,11 +20,11 @@ const MainNav = () => {
                             <p>User</p>
                         </li>
 
-                        <li>
+                        <li className="nav-content-li">
                             Friends
                         </li>
 
-                        <li>
+                        <li className="nav-content-li">
                             Logout
                         </li>
 
