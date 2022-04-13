@@ -1,0 +1,13 @@
+.home-newPost {
+    margin: .8rem auto;
+}
+
+.home-newPost input {
+    width: 90%;
+    height: 1.3rem;
+}
+
+.home-newPost button {
+    width: 9%;
+    height: 1.6rem;
+}

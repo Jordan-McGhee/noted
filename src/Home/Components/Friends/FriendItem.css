@@ -1,0 +1,28 @@
+.friendItem-icon-name {
+    display: flex;
+    align-items: center;
+}
+
+.friendItem-icon-name img {
+    width: 1.5rem;
+    margin-right: .65rem;
+}
+
+.friendItem-posts-friends {
+    display: flex;
+    align-items: center;
+    margin-top: .65rem;
+}
+
+.friendItem-posts-friends img {
+    width: 1rem;
+    margin-right: .35rem;
+}
+
+.friendItem-posts-friends p {
+    margin-right: .45rem;
+}
+
+.posts-friends {
+    display: flex;
+}
