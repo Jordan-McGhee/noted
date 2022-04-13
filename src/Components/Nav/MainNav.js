@@ -1,3 +1,5 @@
+import React from 'react';
+
 import "./MainNav.css"
 import userIcon from "../../Icons/user-placeholder.png"
 

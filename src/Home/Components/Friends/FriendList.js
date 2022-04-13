@@ -1,5 +1,6 @@
-import FriendItem from "./FriendItem"
+import React from 'react';
 
+import FriendItem from "./FriendItem"
 import "./FriendList.css"
 
 

@@ -1,3 +1,5 @@
+import React from 'react';
+
 import './App.css';
 import MainNav from './Components/Nav/MainNav';
 import FriendList from './Home/Components/Friends/FriendList';

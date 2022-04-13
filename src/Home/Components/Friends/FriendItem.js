@@ -1,3 +1,5 @@
+import React from 'react';
+
 import Card from "../../../Components/UI/Card"
 import userIcon from "../../../Icons/user-placeholder.png"
 import commentIcon from "../../../Icons/comment-placeholder.png"
