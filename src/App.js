@@ -7,7 +7,6 @@ import NewPost from './Home/Components/Posts/NewPost';
 import PostList from './Home/Components/Posts/PostList';
 
 function App() {
-  
 
   const DUMMY_POSTS = [
     { id: "post1", user: { name: "Jordan McGhee", email: "test@test"}, content: "This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post ", date: "placeholder for date text"},
