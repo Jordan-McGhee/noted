@@ -1,9 +1,9 @@
 import React from 'react';
 
-import Card from "../../../Components/UI/Card"
-import userIcon from "../../../Icons/user-placeholder.png"
-import heartIcon from "../../../Icons/heart-placeholder.png"
-import commentIcon from "../../../Icons/comment-placeholder.png"
+import Card from "../../../../Components/UI/Card"
+import userIcon from "../../../../Icons/user-placeholder.png"
+import heartIcon from "../../../../Icons/heart-placeholder.png"
+import commentIcon from "../../../../Icons/comment-placeholder.png"
 import "./PostItem.css"
 
 const PostItem = props => {
