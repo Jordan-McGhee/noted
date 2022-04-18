@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 import "./MainNav.css"
 import userIcon from "../../Icons/user-placeholder.png"
@@ -17,17 +18,27 @@ const MainNav = () => {
 
                     <ul>
 
+                        <li className="nav-content-li">
+                            <NavLink to="/">
+                                Home
+                            </NavLink>
+                        </li>
+
                         <li className="user-nav">
-                            <img src={ userIcon } alt="user icon" />
-                            <p>User</p>
+                            <NavLink to ="profile">
+                                <img src={ userIcon } alt="user icon" />
+                                <p>User</p>
+                            </NavLink>
                         </li>
 
                         <li className="nav-content-li">
-                            Friends
+                            <NavLink to="friends">
+                                <p>Friends</p>
+                            </NavLink>
                         </li>
 
                         <li className="nav-content-li">
-                            Logout
+                            <p>Logout</p>
                         </li>
 
                     </ul>
