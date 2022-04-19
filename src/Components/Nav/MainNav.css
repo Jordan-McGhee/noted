@@ -1,6 +1,6 @@
 .nav-header {
     height: 4rem;
-    padding: 1.5rem;
+    padding: 1.5rem 0;
     background-color: #fcd5ce;
     margin-bottom: 1rem;
 }
@@ -10,8 +10,8 @@
     justify-content: space-between;
     margin: 2rem auto;
     align-items: center;
-    width: 90%;
-    border: 1px solid red;
+    width: 85%;
+    /* border: 1px solid red; */
 }
 
 .nav-content ul {
@@ -31,6 +31,14 @@
     font-size: 1.5rem;
 }
 
+.nav-content ul li p {
+    color: black
+}
+
+.nav-content ul li p:hover {
+    color: white
+}
+
 .nav-content-li {
     margin: 0 3rem;
 }
@@ -43,4 +51,15 @@
 .user-nav img {
     width: 1.5rem;
     margin-right: .35rem;
+}
+
+nav ul li {
+    padding: .35rem .5rem;
+}
+
+nav ul li:hover {
+    background-color: #DB938F;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
 }

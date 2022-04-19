@@ -5,6 +5,7 @@ import "./MainNav.css"
 import userIcon from "../../Icons/user-placeholder.png"
 
 const MainNav = () => {
+
     return (
         <header className="nav-header">
 
@@ -19,20 +20,20 @@ const MainNav = () => {
                     <ul>
 
                         <li className="nav-content-li">
-                            <NavLink to="/">
-                                Home
+                            <NavLink to="/" className="navLink">
+                                <p>Home</p>
                             </NavLink>
                         </li>
 
                         <li className="user-nav">
-                            <NavLink to ="profile">
+                            <NavLink to ="profile" className = "user-nav navLink">
                                 <img src={ userIcon } alt="user icon" />
                                 <p>User</p>
                             </NavLink>
                         </li>
 
                         <li className="nav-content-li">
-                            <NavLink to="friends">
+                            <NavLink to="friends"  className="navLink">
                                 <p>Friends</p>
                             </NavLink>
                         </li>
