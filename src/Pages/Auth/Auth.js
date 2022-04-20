@@ -5,11 +5,11 @@ import "./Auth.css"
 const Auth = () => {
 
     // FIRST
-    // NEED A LOGGING UP AND SIGN IN FORM
-    // NEED STATE TO DETERMINE WHICH FORM TO RENDER
+    // NEED A LOGGING UP AND SIGN IN FORM --done
+    // NEED STATE TO DETERMINE WHICH FORM TO RENDER --done
     // STATE CHANGE HANDLER FOR WHEN BUTTON TO SWITCH IS PRESSED  --done
-    // SUBMIT HANDLER FUNCTION
-    // CONDITIONAL RENDERING OF FORM BEFORE RETURN STATEMENT
+    // SUBMIT HANDLER FUNCTION --done
+    // CONDITIONAL RENDERING OF FORM BEFORE RETURN STATEMENT 
     
     // NEXT
     // VALIDATE FORM INPUTS
@@ -84,7 +84,7 @@ const Auth = () => {
                         { isLoggingIn ? "Login" : "Signup" }
                     </button>
 
-                    <p onClick={ changeLoginHandler }>{ isLoggingIn ? "I need an Account" : "I already have an account"}</p>
+                    <p onClick={ changeLoginHandler } className="switch-state-p">{ isLoggingIn ? "I need an Account" : "I already have an account"}</p>
                 </div>
             </form>
         </div>

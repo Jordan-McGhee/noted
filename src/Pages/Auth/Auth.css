@@ -1,12 +1,14 @@
 .auth-form {
     background-color: #FFB5A7;
     margin: 3rem auto;
-    width: 40%;
+    width: 30%;
     padding: 3rem;
+    border-radius: .5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
 }
 
 .form-field {
-    border: 1px solid red;
+    /* border: 1px solid red; */
     display: flex;
     flex-direction: column;
     margin: 1rem auto;
@@ -17,12 +19,45 @@
 }
 
 .form-field input {
-    width: 60%;
-    margin: 1rem auto;
+    width: 80%;
+    margin: .75rem auto;
     height: 2rem;
+    border-radius: .35rem;
+    border: 1px solid #f8edeb;
+}
+
+.form-field input:hover {
+    border: 1px solid #DB938F;
+    background-color: #f8edeb;
 }
 
 .auth-form-button {
-    padding: .5rem 1.25rem;
-    margin: 1rem auto;
+    padding: .65rem 1.25rem;
+    margin: 1rem auto 2rem;
+    background-color: #f8edeb;
+    color: #DB938F;
+    border: none;
+    font-size: larger;
+    border-radius: .35rem;
+}
+
+.auth-form-button:hover {
+    background-color: #DB938F;
+    color: #f8edeb;
+    cursor: pointer;
+}
+
+.switch-state-p {
+    background-color: #DB938F;
+    color: #f8edeb;
+    width: 45%;
+    margin: auto;
+    padding: .5rem 1rem;
+    border-radius: .35rem;
+}
+
+.switch-state-p:hover {
+    cursor: pointer;
+    background-color: #f8edeb;
+    color: #DB938F;
 }
