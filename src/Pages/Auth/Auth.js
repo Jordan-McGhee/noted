@@ -75,6 +75,11 @@ const Auth = () => {
 
     return (
         <div>
+
+            <p className="auth-p">
+                { isLoggingIn ? "Login" : "Signup"}
+            </p>
+
             <form onSubmit={ formSubmitHandler } className = "auth-form">
                 
                 { loginForm }
