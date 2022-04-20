@@ -1,0 +1,28 @@
+.auth-form {
+    background-color: #FFB5A7;
+    margin: 3rem auto;
+    width: 40%;
+    padding: 3rem;
+}
+
+.form-field {
+    border: 1px solid red;
+    display: flex;
+    flex-direction: column;
+    margin: 1rem auto;
+}
+
+.form-field label {
+    font-size: 1.75rem;
+}
+
+.form-field input {
+    width: 60%;
+    margin: 1rem auto;
+    height: 2rem;
+}
+
+.auth-form-button {
+    padding: .5rem 1.25rem;
+    margin: 1rem auto;
+}
