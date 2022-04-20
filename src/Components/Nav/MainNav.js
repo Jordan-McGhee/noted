@@ -26,7 +26,7 @@ const MainNav = () => {
                         </li>
 
                         <li className="user-nav">
-                            <NavLink to ="profile" className = "user-nav navLink">
+                            <NavLink to ="user" className = "user-nav navLink">
                                 <img src={ userIcon } alt="user icon" />
                                 <p>User</p>
                             </NavLink>
