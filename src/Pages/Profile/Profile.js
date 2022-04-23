@@ -42,7 +42,6 @@ const Profile = () => {
             </div>
 
 
-
             <div className="profile-post-section">
                 <NewPost />
                 <PostList items={ DUMMY_POSTS } />
