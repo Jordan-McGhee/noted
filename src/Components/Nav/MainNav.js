@@ -39,7 +39,9 @@ const MainNav = () => {
                         </li>
 
                         <li className="nav-content-li">
-                            <p>Logout</p>
+                            <NavLink to="auth"  className="navLink">
+                                <p>Logout</p>
+                            </NavLink>
                         </li>
 
                     </ul>
