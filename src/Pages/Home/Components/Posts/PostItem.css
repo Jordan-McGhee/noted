@@ -50,3 +50,11 @@
     width: fit-content;
     /* border: 1px solid red; */
 }
+
+.post-view-comments:hover {
+    cursor: pointer;
+}
+
+.post-comment-section {
+    margin-top: .5rem;
+}
