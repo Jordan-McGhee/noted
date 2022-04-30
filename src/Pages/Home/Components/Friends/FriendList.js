@@ -12,7 +12,7 @@ const FriendList = props => {
                 { props.items.map((friend) => (
                     <FriendItem
                         key={ friend.id }
-                        user={ friend.user }
+                        user={ friend }
                     />
                 ))}
             </ul>

@@ -26,14 +26,14 @@ const MainNav = () => {
                         </li>
 
                         <li className="user-nav">
-                            <NavLink to ="user" className = "user-nav navLink">
+                            <NavLink to ="user/me" className = "user-nav navLink">
                                 <img src={ userIcon } alt="user icon" />
                                 <p>User</p>
                             </NavLink>
                         </li>
 
                         <li className="nav-content-li">
-                            <NavLink to="friends"  className="navLink">
+                            <NavLink to="user/me/friends"  className="navLink">
                                 <p>Friends</p>
                             </NavLink>
                         </li>
