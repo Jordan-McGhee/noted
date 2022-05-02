@@ -11,7 +11,7 @@ const FriendItem = props => {
     return (
         <Card>
 
-            <Link to={`${props.user.userID}`}>
+            <Link to={`/user/${props.user.userID}`}>
                 <div className="friendItem-icon-name">
                     <img src={ userIcon } alt="Profile icon" />
                     <h3>{ props.user.name }</h3>
