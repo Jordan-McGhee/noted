@@ -1,4 +1,4 @@
-import { DUMMY_USERS, DUMMY_POSTS, DUMMY_FRIENDS } from "../../DUMMY/DummyStuff";
+import { DUMMY_USERS, DUMMY_POSTS_PROFILE, DUMMY_FRIENDS } from "../../DUMMY/DummyStuff";
 
 import React from "react";
 import { useParams } from "react-router-dom";
@@ -33,7 +33,7 @@ const Profile = () => {
 
             <div className="profile-post-section">
                 <NewPost />
-                <PostList items={ DUMMY_POSTS } />
+                <PostList items={ DUMMY_POSTS_PROFILE } isProfilePosts = { true } />
             </div>
         </div>
     )

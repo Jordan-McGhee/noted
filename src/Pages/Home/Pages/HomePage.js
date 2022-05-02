@@ -1,4 +1,4 @@
-import { DUMMY_POSTS, DUMMY_FRIENDS } from "../../../DUMMY/DummyStuff";
+import { DUMMY_POSTS_HOME, DUMMY_FRIENDS } from "../../../DUMMY/DummyStuff";
 
 import React from "react";
 
@@ -13,7 +13,7 @@ const HomePage = () => {
 
             <div className='app-posts-section'>
                 <NewPost />
-                <PostList items={ DUMMY_POSTS.reverse() } />
+                <PostList items={ DUMMY_POSTS_HOME.reverse() } isProfilePosts = { false } />
             </div>
 
             <div className='vertical-line'></div>

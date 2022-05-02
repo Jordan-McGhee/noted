@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import Card from "../../../../Components/UI/Card"
 import userIcon from "../../../../Icons/user-placeholder.png"
@@ -18,20 +19,43 @@ const PostItem = props => {
         }
     }
 
+    let postInfo
+
+    if (props.profilePost) {
+        postInfo = 
+        <div className="post-name-date-section">
+
+            <img src={ userIcon } alt="user icon" />
+
+            <div className="user-info">
+                <h3>{ props.user.name }</h3>
+                <p>{ props.date }</p>
+            </div>
+
+        </div>
+
+    } else {
+        postInfo =
+        <div className="post-name-date-section">           
+
+                <img src={ userIcon } alt="user icon" />
+
+                <div className="user-info">
+                    <Link to={`/user/${props.user.userID}`}>
+                        <h3>{ props.user.name }</h3>
+                    </Link>
+                    <p>{ props.date }</p>
+                </div>
+
+        </div>
+    }
+
     return (
         <Card className="post-card">
 
             <div>
 
-                <div className="post-name-date-section">
-                    
-                    <img src={ userIcon } alt="user icon" />
-
-                    <div className="user-info">
-                        <h3>{ props.user.name }</h3>
-                        <p>{ props.date }</p>
-                    </div>
-                </div>
+                { postInfo }
 
                 <div className="content">
                     <p>
