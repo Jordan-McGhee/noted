@@ -16,6 +16,7 @@ const PostItem = props => {
             setShowComments(false)
         } else {
             setShowComments(true)
+            console.log(`Comments: ${props.comments}`)
         }
     }
 
@@ -72,7 +73,7 @@ const PostItem = props => {
 
                     <div className="post-comments">
                         <img src={ commentIcon } alt="comment icon" />
-                        <p>12</p>
+                        <p>{props.comments ? props.comments.length : 0}</p>
                     </div>
 
                     <div className="post-view-comments" onClick={ showCommentHandler }>
