@@ -1,10 +1,13 @@
 import React from "react";
 
 const CommentItem = (props) => {
-    <div>
-        <h5>{ props.user.userID }</h5>
-        <p>{ props.content }</p>
-    </div>
+
+    return(
+        <li>
+            <h5>{ props.user.name }</h5>
+            <p>{ props.content }</p>
+        </li>
+    )
 }
 
 export default CommentItem
