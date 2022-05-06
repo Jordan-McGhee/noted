@@ -81,19 +81,19 @@ const PostItem = props => {
                         <p>31</p>
                     </div>
 
-                    {/* <div className="post-comments">
+                    <div className="post-comments">
                         <img src={ commentIcon } alt="comment icon" />
                         <p>{props.comments ? props.comments.length : 0}</p>
-                    </div> */}
+                    </div>
 
                     <div className="post-view-comments" onClick={ showCommentHandler }>
                         
-                        {/* <p>{ showComments ? "Hide Comments" : "View Comments"}</p> */}
+                        <p>{ showComments ? "Hide Comments" : "View Comments"}</p>
                         
-                        <div className="post-comments" onClick={()=>console.log(props.comments)}>
+                        {/* <div className="post-comments" onClick={()=>console.log(props.comments)}>
                             <img src={ commentIcon } alt="comment icon" />
                             <p>{props.comments ? props.comments.length : 0}</p>
-                        </div>
+                        </div> */}
 
                     </div>
                 </div>
