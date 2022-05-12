@@ -1,13 +1,12 @@
 .comment-item {
     list-style-type: none;
-    margin-left: 1rem;
 }
 
 .comment-item h5 {
     margin: .25rem 0;
 }
 
-li:not(:last-child) {
+.comment-item:not(:last-child) {
     border-bottom: 1px solid #DB938F;
     margin-bottom: .85rem;
     padding-bottom: .85rem;

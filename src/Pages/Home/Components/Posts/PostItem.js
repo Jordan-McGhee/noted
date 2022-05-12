@@ -7,6 +7,7 @@ import userIcon from "../../../../Icons/user-placeholder.png"
 import heartIcon from "../../../../Icons/heart-placeholder.png"
 import commentIcon from "../../../../Icons/comment-placeholder.png"
 import "./PostItem.css"
+import NewComment from '../Comments/NewComment';
 
 const PostItem = props => {
 
@@ -98,6 +99,7 @@ const PostItem = props => {
                     </div>
                 </div>
 
+                    <NewComment />
 
                     { showComments &&
                         <div className='post-comment-section'>

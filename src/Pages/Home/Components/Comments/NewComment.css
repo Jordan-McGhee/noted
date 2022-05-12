@@ -1,0 +1,27 @@
+.new-comment {
+    margin: .8rem 0;
+    /* padding: 0 .3rem; */
+}
+
+.new-comment input {
+    width: 85%;
+    height: 1rem;
+    padding: .3rem;
+}
+
+.new-comment button {
+    min-width: 10%;
+    padding: .3rem;
+    margin-left: .2rem;
+    color: #F8EDEB;
+    background-color: #DB938F;
+    border: none;
+    height: 2rem;
+}
+
+.new-comment button:hover {
+    color: #DB938F;
+    background-color: #F8EDEB;
+    border: 1px solid #DB938F;
+    cursor: pointer;
+}
