@@ -19,7 +19,7 @@ const PostItem = props => {
             setShowComments(false)
         } else {
             setShowComments(true)
-            console.log(`Comments: ${props.comments}`)
+            // console.log(`Comments: ${props.comments}`)
         }
     }
 

@@ -5,7 +5,7 @@ import CommentItem from "./CommentItem";
 
 const CommentList = (props) => {
 
-    console.log(props.items)
+    // console.log(props.items)
     return (
         <ul className="comment-list">
             { props.items.map((item) => (
