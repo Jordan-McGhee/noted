@@ -1,6 +1,8 @@
 .new-comment {
     margin: .8rem 0;
     /* padding: 0 .3rem; */
+    display: flex;
+    align-items: center;
 }
 
 .new-comment input {
@@ -17,6 +19,7 @@
     background-color: #DB938F;
     border: none;
     height: 2rem;
+    border-radius: .2rem;
 }
 
 .new-comment button:hover {
