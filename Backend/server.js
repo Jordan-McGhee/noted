@@ -28,7 +28,7 @@ const app = express()
 //     next()
 // })
 
-app.use(userRoutes)
+app.use("/user", userRoutes)
 
 // app.use("/auth", authRoutes)
 
