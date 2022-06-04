@@ -12,8 +12,7 @@ const bodyParser = require("body-parser")
 // ROUTE VARIABLES
 // const authRoutes = require("./routes/auth-routes")
 const userRoutes = require("./routes/user-routes")
-// const userRoutes = require("./routes/user-routes")
-// const postRoutes = require("./routes/post-routes")
+const postRoutes = require("./routes/post-routes")
 // const HttpError = require("./models/http-error")
 
 const app = express()
@@ -28,11 +27,28 @@ const app = express()
 //     next()
 // })
 
-app.use("/user", userRoutes)
-
 // app.use("/auth", authRoutes)
+app.use("/user", userRoutes)
+app.use("/post", postRoutes)
 
-// app.use("/post", postRoutes)
+// middleware with 4 parameters is treated as a special middleware by express and will only be executed on requests that have an error associated with it
+app.use((error, req, res, next) => {
+
+    // checks to see if we've already sent the error response with a header to the end user
+    if (res.headerSent) {
+        return next(error)
+    }
+
+    // if we reach this code, no error message has been sent, so we will send one now
+    // Checks for a code/message attached to the error object, or sets it to 500 and a default error message
+    // this is triggered by either throwing an error or passing an error to next() in our routes
+    // HAS TO BE PASSED IN NEXT() IF ASYNC CODE
+    res
+        .status(error.code || 500)
+        .json({message: error.message || "Something went wrong!"})
+
+})
+
 
 // app.use((req, res, next) => {
 //     throw new HttpError("Could not find this route.", 404)
