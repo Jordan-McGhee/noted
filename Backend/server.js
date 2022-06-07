@@ -17,7 +17,9 @@ const postRoutes = require("./routes/post-routes")
 
 const app = express()
 
-// app.use(bodyParser.json())
+// want to parse the information we receive from the user before it reaches our other middlewares
+// this converts all incoming json data into regular javascript
+app.use(bodyParser.json())
 
 // app.use((req, res, next) => {
 //     res.setHeader("Access-Control-Allow-Origin", "*")

@@ -1,5 +1,7 @@
 const express = require("express");
 
+const postsControllers = require("../controllers/posts-controller")
+
 const DUMMY_POSTS_PROFILE = [
     { postID: "post1", user: { name: "Jordan McGhee", email: "test@test"}, content: "This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post ", date: "placeholder for date text", comments: [
         {
@@ -76,6 +78,6 @@ const DUMMY_POSTS_PROFILE = [
 
 const router = express.Router()
 
-// router.get("/:postID")
+router.post("/create", postsControllers.createPost)
 
 module.exports = router
