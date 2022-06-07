@@ -13,7 +13,7 @@ const bodyParser = require("body-parser")
 // const authRoutes = require("./routes/auth-routes")
 const userRoutes = require("./routes/user-routes")
 const postRoutes = require("./routes/post-routes")
-// const HttpError = require("./models/http-error")
+const HttpError = require("./models/http-error")
 
 const app = express()
 
@@ -33,6 +33,15 @@ app.use(bodyParser.json())
 app.use("/user", userRoutes)
 app.use("/post", postRoutes)
 
+// middleware for requests that didn't get a response from our above routes
+// if a user goes to a page that isn't part of our API
+// make sure to pass the new error object we created through next so it enters our default error middleware below
+app.use((req, res, next) => {
+    const error = new HttpError("Could not find this page!", 404)
+    next(error)
+})
+
+// ERROR ROUTE
 // middleware with 4 parameters is treated as a special middleware by express and will only be executed on requests that have an error associated with it
 app.use((error, req, res, next) => {
 
