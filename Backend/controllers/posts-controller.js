@@ -118,6 +118,8 @@ const removeComment = (req, res, next) => {
 
 }
 
+// ^^^^^^^^^^^^^^^^^^^^^^^^^
+
 const deletePost = (req, res, next) => {
     // deletes chosen post, filtering through dummy data to find the post to omit
     // console logs for troubleshooting
