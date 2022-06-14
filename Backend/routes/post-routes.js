@@ -80,4 +80,18 @@ const router = express.Router()
 
 router.post("/create", postsControllers.createPost)
 
+// ADD THESE LATER ONCE WE HAVE AUTHENTICATED USERS
+
+router.post("/:postID/addLike", postsControllers.addLike)
+
+router.post("/:postID/removeLike", postsControllers.removeLike)
+
+router.post("/:postID/addComment", postsControllers.addComment)
+
+router.post("/:postID/removeComment", postsControllers.removeComment)
+
+// ^^^^^^^^^^
+
+router.delete("/:postID", postsControllers.deletePost)
+
 module.exports = router
