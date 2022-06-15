@@ -1,4 +1,5 @@
 const HttpError = require("../models/http-error")
+const { validationResult } = require("express-validator")
 
 // used to create a unique id
 const { v4: uuidv4 } = require("uuid")
@@ -83,6 +84,16 @@ let DUMMY_POSTS_HOME = [
 ]
 
 const createPost = (req, res, next) => {
+
+    // looks into req object and checks for any validation errors that were picked up. Returns an object
+    const errors = validationResult(req)
+
+    // check to see if there are any errors
+    if (!errors.isEmpty()) {
+        console.log(errors)
+        throw new HttpError("Your post must be 5 characters or longer! Please try again.")
+    }
+
     // use object destructuring to grab data from the incoming request body
 
     const { user, content } = req.body
@@ -120,12 +131,58 @@ const removeComment = (req, res, next) => {
 
 // ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+const editPost = (req, res, next) => {
+
+    // looks into req object and checks for any validation errors that were picked up. Returns an object
+    const errors = validationResult(req)
+
+    // check to see if there are any errors
+    if (!errors.isEmpty()) {
+        console.log(errors)
+        throw new HttpError("Your post must be 5 characters or longer! Please try again.")
+    }
+
+    const { content } = req.body
+
+    // find post from url
+    let chosenPostID = req.params.postID
+
+    // Changing data like this is bad practice because an async task may fail and not all data will be updated correctly
+    // chosenPost.content = content
+
+    // correct way to update an object via patch request:
+    // create a copy of the item, change the copy, and only when it's finished changing, replace the original with the updated copy
+    // create copy with the spread (...) operator, find that post's index in the dummy array
+
+    const chosenPost = { ...DUMMY_POSTS_HOME.find(post => post.postID === chosenPostID) }
+    const postIndex = DUMMY_POSTS_HOME.findIndex(post => post.postID === chosenPostID)
+
+    // check to see if there is a post. If not, throw error and exit function
+    if (!chosenPost) {
+        throw new HttpError("Could not find this post!", 404)
+    }
+
+    // grabbed old content of post for troubleshooting
+    let oldContent = chosenPost.content
+
+    // make the updates, then replace the original post with the copy at the index
+    chosenPost.content = content
+    DUMMY_POSTS_HOME[postIndex] = chosenPost
+
+    res.status(200).json({message: "Updated post!", post: chosenPost, newContent: chosenPost.content, oldContent: oldContent})
+}
+
+
 const deletePost = (req, res, next) => {
     // deletes chosen post, filtering through dummy data to find the post to omit
     // console logs for troubleshooting
 
-    chosenPostID = req.params.postID
-    chosenPost = DUMMY_POSTS_HOME.find(post => post.postID === chosenPostID)
+    let chosenPostID = req.params.postID
+    let chosenPost = DUMMY_POSTS_HOME.find(post => post.postID === chosenPostID)
+
+    if (!chosenPost) {
+        throw new HttpError("Could not find this post!", 404)
+    }
 
     // console.log(`PostID: ${chosenPostID}, post: ${chosenPost.content.length}`)
 
@@ -137,6 +194,7 @@ const deletePost = (req, res, next) => {
 }
 
 exports.createPost = createPost
+exports.editPost = editPost
 exports.addLike = addLike
 exports.removeLike = removeLike
 exports.addComment = addComment

@@ -1,5 +1,13 @@
 const express = require("express");
 
+// a function we can execute that returns a new middleware to check/validate information from the req body
+// pass it as a middleware in the necessary routes (i.e. post/patch routes) -> check()
+// takes the names of the field in the req body that you want to validate i.e. check('content') or check("name") and chain the methods you need like check("content").not().isEmpty()
+// can have multiple middleware stored in an array
+// order matters, must go before your functions
+
+const { check } = require("express-validator")
+
 const postsControllers = require("../controllers/posts-controller")
 
 const DUMMY_POSTS_PROFILE = [
@@ -78,7 +86,7 @@ const DUMMY_POSTS_PROFILE = [
 
 const router = express.Router()
 
-router.post("/create", postsControllers.createPost)
+router.post("/create", check('content').isLength({min: 5}), postsControllers.createPost)
 
 // ADD THESE LATER ONCE WE HAVE AUTHENTICATED USERS
 
@@ -91,6 +99,8 @@ router.post("/:postID/addComment", postsControllers.addComment)
 router.post("/:postID/removeComment", postsControllers.removeComment)
 
 // ^^^^^^^^^^
+
+router.patch("/:postID", check("content").isLength({min: 5}), postsControllers.editPost)
 
 router.delete("/:postID", postsControllers.deletePost)
 
