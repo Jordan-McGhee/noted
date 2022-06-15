@@ -88,7 +88,7 @@ const createPost = (req, res, next) => {
     // looks into req object and checks for any validation errors that were picked up. Returns an object
     const errors = validationResult(req)
 
-    // check to see if there are any errors
+    // check to see if there are any errors and throw error if so
     if (!errors.isEmpty()) {
         console.log(errors)
         throw new HttpError("Your post must be 5 characters or longer! Please try again.")

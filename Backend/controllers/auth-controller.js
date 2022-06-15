@@ -1,6 +1,7 @@
 // used to create a unique id
 const { v4: uuidv4 } = require("uuid")
 const HttpError = require("../models/http-error")
+const { validationResult } = require("express-validator")
 
 const DUMMY_USERS = [
     { userID: "me", name: "Jordan McGhee", email: "me@test", password: "12345678", numberOfPosts: 31, numberOfFriends: 69 },
@@ -17,6 +18,16 @@ const authPage = (req, res, next) => {
 }
 
 const signUp = (req, res, next) => {
+
+    // looks into req object and checks for any validation errors that were picked up. Returns an object
+    const errors = validationResult(req)
+
+    // check to see if there are any errors and throw error if so
+    if (!errors.isEmpty()) {
+        console.log(errors)
+        throw new HttpError("There's something wrong with the information you entered. Please check your inputs.", 401)
+    }
+
     // use object destructuring to grab the necessary values from the user
     const { name, email, password } = req.body
 
