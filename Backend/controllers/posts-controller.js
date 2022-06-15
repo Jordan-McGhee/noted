@@ -80,7 +80,18 @@ let DUMMY_POSTS_HOME = [
     { postID: "post5", user: { name: "Chris McGhee", email: "test@test", userID: "friend1"}, content: "This is Ballin C's test post", date: "placeholder for date text"},
     { postID: "post6", user: { name: "Rhonda McGhee", email: "test@test", userID: "friend3"}, content: "This is Mom's test again post", date: "placeholder for date text"},
     { postID: "post7", user: { name: "Thomas McGhee", email: "test@test", userID: "friend4"}, content: "This is Dad's test again post", date: "placeholder for date text"},
-    { postID: "post8", user: { name: "Chris McGhee", email: "test@test", userID: "friend1"}, content: "This is Ballin C's test again post", date: "placeholder for date text"}
+    { postID: "post8", user: { name: "Chris McGhee", email: "test@test", userID: "friend1"}, content: "This is Ballin C's test again post", date: "placeholder for date text", comments: [
+        {
+            user: { name: "Jordan McGhee", email: "test@test", userID: "me" },
+            commentID: 'comment13',
+            content: "This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment"
+        },
+        {
+            user: { name: "Jordan McGhee", email: "test@test", userID: "me" },
+            commentID: 'comment14',
+            content: "This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment"
+        }
+    ]}
 ]
 
 const createPost = (req, res, next) => {
@@ -109,7 +120,7 @@ const createPost = (req, res, next) => {
 
     DUMMY_POSTS_HOME.unshift(createdPost)
 
-    res.status(201).json({posts: DUMMY_POSTS_HOME, post: createdPost})
+    res.status(201).json({ posts: DUMMY_POSTS_HOME, post: createdPost })
 }
 
 // ADD THESE LATER ONCE WE HAVE AUTHENTICATED USERS
@@ -122,11 +133,60 @@ const removeLike = (req, res, next) => {
 }
 
 const addComment = (req, res, next) => {
+    // looks into req object and checks for any validation errors that were picked up. Returns an object
+    const errors = validationResult(req)
 
+    // check to see if there are any errors
+    if (!errors.isEmpty()) {
+        console.log(errors)
+        throw new HttpError("Your post must be 5 characters or longer! Please try again.")
+    }
+
+    let chosenPostID = req.params.postID
+    let chosenPost = DUMMY_POSTS_HOME.find(post => post.postID === chosenPostID)
+
+    // check to see if there is a post. If not, throw error and exit function
+    if (!chosenPost) {
+        throw new HttpError("Could not find this post!", 404)
+    }
+
+    const { user, content } = req.body
+
+    const newComment = {
+        id: uuidv4(),
+        user,
+        content
+    }
+
+    chosenPost.comments.push(newComment)
+    
+    res.status(201).json({ message: "Added new comment!", post: chosenPost.content, postComments: chosenPost.comments, comment: newComment.content })
 }
 
-const removeComment = (req, res, next) => {
+const deleteComment = (req, res, next) => {
+    // deletes chosen comment, filtering through all comments to find the one to omit
 
+    // find the correct post with ID from params
+    let chosenPostID = req.params.postID
+    let chosenPost = DUMMY_POSTS_HOME.find(post => post.postID === chosenPostID)
+
+    // make sure the post exists
+    if (!chosenPost) {
+        throw new HttpError("Could not find this post!", 404)
+    }
+
+    // do the same process for the comment
+    let chosenCommentID = req.params.commentID
+    let chosenComment = chosenPost.comments.find(comment => comment.commentID = chosenCommentID)
+
+    if (!chosenComment) {
+        throw new HttpError("Could not find this comment!", 404)
+    }
+
+    // filter the posts comments to exclude the chosen comment
+    chosenPost.comments = chosenPost.comments.filter(comment => comment.commentID !== chosenCommentID)
+
+    res.status(200).json({ message: "Deleted comment!", postComments: chosenPost.comments, deletedComment: chosenComment.content })
 }
 
 // ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -169,7 +229,7 @@ const editPost = (req, res, next) => {
     chosenPost.content = content
     DUMMY_POSTS_HOME[postIndex] = chosenPost
 
-    res.status(200).json({message: "Updated post!", post: chosenPost, newContent: chosenPost.content, oldContent: oldContent})
+    res.status(200).json({ message: "Updated post!", post: chosenPost, newContent: chosenPost.content, oldContent: oldContent })
 }
 
 
@@ -190,7 +250,7 @@ const deletePost = (req, res, next) => {
 
     // console.log(`After filter — posts: ${DUMMY_POSTS_HOME}, deletedPost: ${chosenPost.content}`)
 
-    res.status(200).json({message: "Deleted post!", deletedPost: chosenPostID})
+    res.status(200).json({ message: "Deleted post!", deletedPost: chosenPostID })
 }
 
 exports.createPost = createPost
@@ -198,5 +258,5 @@ exports.editPost = editPost
 exports.addLike = addLike
 exports.removeLike = removeLike
 exports.addComment = addComment
-exports.removeComment = removeComment
+exports.deleteComment = deleteComment
 exports.deletePost = deletePost
