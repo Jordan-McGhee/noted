@@ -1,18 +1,16 @@
-// import fs from "fs"
-// import path from "path"
-
 const express = require("express")
 const bodyParser = require("body-parser")
+const MongoClient = require("mongodb").MongoClient
 // import mongoose from "mongoose"
 
 // FOR CONNECTING TO MONGODB SERVER
-// const password = "cceyoMf2dCSYCCk9"
-// const url = `mongodb+srv://JordanMcGhee:${password}@noted.drooh.mongodb.net/?retryWrites=true&w=majority`
+const password = "CdsiLNos7MAaIdiu"
+const url = `mongodb+srv://JordanMcGhee:${password}@noted.yrfz0c3.mongodb.net/?retryWrites=true&w=majority`
 
 // ROUTE VARIABLES
 const authRoutes = require("./routes/auth-routes")
 const userRoutes = require("./routes/user-routes")
-const postRoutes = require("./routes/post-routes")
+const postRoutes = require("./routes/post-routes") 
 const HttpError = require("./models/http-error")
 
 const app = express()
