@@ -1,4 +1,6 @@
 const HttpError = require("../models/http-error")
+const mongoose = require("mongoose")
+const User = require("../models/users-model")
 
 // DUMMY DATA
 const DUMMY_USERS = [

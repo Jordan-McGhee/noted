@@ -1,11 +1,18 @@
 const express = require("express")
 const bodyParser = require("body-parser")
 const MongoClient = require("mongodb").MongoClient
-// import mongoose from "mongoose"
+const mongoose = require("mongoose")
 
 // FOR CONNECTING TO MONGODB SERVER
 const password = "CdsiLNos7MAaIdiu"
 const url = `mongodb+srv://JordanMcGhee:${password}@noted.yrfz0c3.mongodb.net/?retryWrites=true&w=majority`
+
+// connecting to database
+mongoose.connect(url).then(() =>{
+    console.log("Connected to database!")
+}).catch(() => {
+    console.log("Could not connect to database.")
+})
 
 // ROUTE VARIABLES
 const authRoutes = require("./routes/auth-routes")

@@ -1,5 +1,16 @@
 const HttpError = require("../models/http-error")
 const { validationResult } = require("express-validator")
+const mongoose = require("mongoose")
+const Post = require("../models/posts-model")
+
+// information to connect to database
+// const password = "CdsiLNos7MAaIdiu"
+// const url = `mongodb+srv://JordanMcGhee:${password}@noted.yrfz0c3.mongodb.net/?retryWrites=true&w=majority`
+// mongoose.connect(url).then(() =>{
+//     console.log("Connected to database!")
+// }).catch(() => {
+//     console.log("Could not connect to database.")
+// })
 
 // used to create a unique id
 const { v4: uuidv4 } = require("uuid")
@@ -94,7 +105,7 @@ let DUMMY_POSTS_HOME = [
     ]}
 ]
 
-const createPost = (req, res, next) => {
+const createPost = async (req, res, next) => {
 
     // looks into req object and checks for any validation errors that were picked up. Returns an object
     const errors = validationResult(req)
@@ -109,18 +120,19 @@ const createPost = (req, res, next) => {
 
     const { user, content } = req.body
 
-    // create an object with the values you need
-    const createdPost = {
+    // create an object with the values you need using post model
+    const createdPost = new Post({
         id: uuidv4(),
-        user,
-        content,
-        comments: [],
-        usersThatLikeThisPost: []
-    }
+        user, 
+        content
+    })
 
-    DUMMY_POSTS_HOME.unshift(createdPost)
+    // dummy code adding new post to dummy data
+    // DUMMY_POSTS_HOME.unshift(createdPost)
 
-    res.status(201).json({ posts: DUMMY_POSTS_HOME, post: createdPost })
+    const result = await createdPost.save()
+
+    res.status(201).json({ result })
 }
 
 // ADD THESE LATER ONCE WE HAVE AUTHENTICATED USERS
