@@ -242,25 +242,30 @@ const editPost = (req, res, next) => {
     res.status(200).json({ message: "Updated post!", post: chosenPost, newContent: chosenPost.content, oldContent: oldContent })
 }
 
+// FIX — NOT DELETING BC NOT PROPERLY HANDLING ERROR??
 
 const deletePost = (req, res, next) => {
     // deletes chosen post, filtering through dummy data to find the post to omit
     // console logs for troubleshooting
 
     let chosenPostID = req.params.postID
-    let chosenPost = DUMMY_POSTS_HOME.find(post => post.postID === chosenPostID)
+    // let chosenPost = Post.findById(post => post.postID === chosenPostID)
 
-    if (!chosenPost) {
-        throw new HttpError("Could not find this post!", 404)
-    }
+    // if (!chosenPost) {
+    //     throw new HttpError("Could not find this post!", 404)
+    // }
 
-    // console.log(`PostID: ${chosenPostID}, post: ${chosenPost.content.length}`)
+    // console.log(`Found post: ${chosenPost}`)
 
-    DUMMY_POSTS_HOME = DUMMY_POSTS_HOME.filter(post => post.postID !== chosenPostID)
+    Post.findByIdAndDelete({ _id: chosenPostID}, (err) => {
 
-    // console.log(`After filter — posts: ${DUMMY_POSTS_HOME}, deletedPost: ${chosenPost.content}`)
+        if (err) {
+            console.log(err)
+            throw new HttpError(err.message, 404)
+        }
 
-    res.status(200).json({ message: "Deleted post!", deletedPost: chosenPostID })
+        res.status(200).json({ message: "Deleted post!" })
+    })
 }
 
 exports.createPost = createPost
