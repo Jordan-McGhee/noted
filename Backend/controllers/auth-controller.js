@@ -29,7 +29,7 @@ const signUp = (req, res, next) => {
     }
 
     // use object destructuring to grab the necessary values from the user
-    const { name, email, password } = req.body
+    const { username, email, password } = req.body
 
     // check if email is already in list of users
     let hasUser = DUMMY_USERS.find(user => user.email === email)
@@ -42,7 +42,7 @@ const signUp = (req, res, next) => {
     // create a new user with the given values from above and initialize the other variables 
     const newUser = {
         userID: uuidv4(),
-        name,
+        username,
         email,
         password,
         posts: [],

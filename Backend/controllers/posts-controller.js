@@ -1,19 +1,7 @@
 const HttpError = require("../models/http-error")
 const { validationResult } = require("express-validator")
-const mongoose = require("mongoose")
 const Post = require("../models/posts-model")
-
-// information to connect to database
-// const password = "CdsiLNos7MAaIdiu"
-// const url = `mongodb+srv://JordanMcGhee:${password}@noted.yrfz0c3.mongodb.net/?retryWrites=true&w=majority`
-// mongoose.connect(url).then(() =>{
-//     console.log("Connected to database!")
-// }).catch(() => {
-//     console.log("Could not connect to database.")
-// })
-
-// used to create a unique id
-const { v4: uuidv4 } = require("uuid")
+const Comment = require("../models/comments-model")
 
 let DUMMY_POSTS_HOME = [
     { postID: "post1",
@@ -122,7 +110,6 @@ const createPost = async (req, res, next) => {
 
     // create an object with the values you need using post model
     const createdPost = new Post({
-        id: uuidv4(),
         user, 
         content
     })
@@ -154,25 +141,36 @@ const addComment = (req, res, next) => {
         throw new HttpError("Your post must be 5 characters or longer! Please try again.")
     }
 
-    let chosenPostID = req.params.postID
-    let chosenPost = DUMMY_POSTS_HOME.find(post => post.postID === chosenPostID)
+    // grab post ID from url
+    const chosenPostID = req.params.postID
 
-    // check to see if there is a post. If not, throw error and exit function
-    if (!chosenPost) {
-        throw new HttpError("Could not find this post!", 404)
-    }
-
+    // grab the info from the request body and save it to a new comment object
     const { user, content } = req.body
 
-    const newComment = {
-        id: uuidv4(),
+    const newComment = new Comment ({
         user,
         content
-    }
+    })
 
-    chosenPost.comments.push(newComment)
-    
-    res.status(201).json({ message: "Added new comment!", post: chosenPost.content, postComments: chosenPost.comments, comment: newComment.content })
+    // save our new comment to the DB, then attach it to the corresponding post using the ID from above
+    newComment.save()
+        .then((result) => {
+            Post.findById(chosenPostID, (err, post) => {
+                // check to see if there is a post. If not, throw error and exit function
+                if (post) {
+
+                    // The below two lines will add the newly saved comment's 
+                    // ObjectID to the the Post's comments array field
+                    post.comments.push(newComment)
+                    post.save()
+
+                    // return a response if successful
+                    res.status(201).json({ message: "Added new comment!", post: post.content, postComments: post.comments, comment: newComment.content })
+                } else {
+                    throw new HttpError("Could not find this post!", 404)
+                }
+        })
+    })
 }
 
 const deleteComment = (req, res, next) => {

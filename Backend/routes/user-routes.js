@@ -6,6 +6,6 @@ const HttpError = require("../models/http-error")
 const router = express.Router()
 
 // route to get a specific user's page.
-router.get("/:userID", usersControllers.getUserByID)
+router.get("/:username", usersControllers.getUserByID)
 
 module.exports = router

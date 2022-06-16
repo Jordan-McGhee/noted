@@ -2,8 +2,15 @@ const mongoose = require("mongoose")
 
 const postSchema = new mongoose.Schema({
     content: { type: String, required: true},
-    comments: Array,
-    usersThatLikeThisPost: Array
+    comments: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment"
+    }],
+    usersThatLikeThisPost: Array,
+    postCreator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }
 })
 
 // model function requires 2 arguments:

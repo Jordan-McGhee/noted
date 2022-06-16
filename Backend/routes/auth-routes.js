@@ -17,7 +17,7 @@ const router = express.Router()
 
 router.post("/signup",
     [
-        check("name")
+        check("username")
             .not()
             .isEmpty(),
         check("email")
