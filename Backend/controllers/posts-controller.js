@@ -105,7 +105,6 @@ const createPost = async (req, res, next) => {
     }
 
     // use object destructuring to grab data from the incoming request body
-
     const { user, content } = req.body
 
     // create an object with the values you need using post model
@@ -114,10 +113,16 @@ const createPost = async (req, res, next) => {
         content
     })
 
-    // dummy code adding new post to dummy data
-    // DUMMY_POSTS_HOME.unshift(createdPost)
+    try{
+        const result = await createdPost.save()
+    } catch (err) {
+        const error = new HttpError(
+            "Creating post failed. Please try again!", 500
+        )
 
-    const result = await createdPost.save()
+        return next(error)
+    }
+    
 
     res.status(201).json({ result })
 }
@@ -131,7 +136,8 @@ const removeLike = (req, res, next) => {
 
 }
 
-const addComment = (req, res, next) => {
+// ADD TRY CATCH BLOCKS??
+const addComment = async (req, res, next) => {
     // looks into req object and checks for any validation errors that were picked up. Returns an object
     const errors = validationResult(req)
 
@@ -153,7 +159,7 @@ const addComment = (req, res, next) => {
     })
 
     // save our new comment to the DB, then attach it to the corresponding post using the ID from above
-    newComment.save()
+    await newComment.save()
         .then((result) => {
             Post.findById(chosenPostID, (err, post) => {
                 // check to see if there is a post. If not, throw error and exit function
@@ -167,7 +173,9 @@ const addComment = (req, res, next) => {
                     // return a response if successful
                     res.status(201).json({ message: "Added new comment!", post: post.content, postComments: post.comments, comment: newComment.content })
                 } else {
-                    throw new HttpError("Could not find this post!", 404)
+                    const error = new HttpError("Could not find this post!", 404)
+
+                    return next(error)
                 }
         })
     })
@@ -201,7 +209,7 @@ const deleteComment = (req, res, next) => {
 
 // ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-const editPost = (req, res, next) => {
+const editPost = async (req, res, next) => {
 
     // looks into req object and checks for any validation errors that were picked up. Returns an object
     const errors = validationResult(req)
@@ -214,8 +222,29 @@ const editPost = (req, res, next) => {
 
     const { content } = req.body
 
-    // find post from url
-    let chosenPostID = req.params.postID
+    let post
+    
+    try {
+        post = await Post.findById(req.params.postID)
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong. Could not update place!", 500
+        )
+        return next(error)
+    }
+    
+    post.content = content
+
+    try {
+        await post.save()
+    } catch(err) {
+        const error = new HttpError(
+            "Something went wrong. Could not update place!", 500
+        )
+        return next(error)
+    } 
+
+    res.status(200).json({ post: post.toObject({ getters: true })})
 
     // Changing data like this is bad practice because an async task may fail and not all data will be updated correctly
     // chosenPost.content = content
@@ -224,31 +253,31 @@ const editPost = (req, res, next) => {
     // create a copy of the item, change the copy, and only when it's finished changing, replace the original with the updated copy
     // create copy with the spread (...) operator, find that post's index in the dummy array
 
-    const chosenPost = { ...DUMMY_POSTS_HOME.find(post => post.postID === chosenPostID) }
-    const postIndex = DUMMY_POSTS_HOME.findIndex(post => post.postID === chosenPostID)
+    // const chosenPost = { ...DUMMY_POSTS_HOME.find(post => post.postID === chosenPostID) }
+    // const postIndex = DUMMY_POSTS_HOME.findIndex(post => post.postID === chosenPostID)
 
     // check to see if there is a post. If not, throw error and exit function
-    if (!chosenPost) {
-        throw new HttpError("Could not find this post!", 404)
-    }
+    // if (!chosenPost) {
+    //     throw new HttpError("Could not find this post!", 404)
+    // }
 
     // grabbed old content of post for troubleshooting
-    let oldContent = chosenPost.content
+    // let oldContent = chosenPost.content
 
-    // make the updates, then replace the original post with the copy at the index
-    chosenPost.content = content
-    DUMMY_POSTS_HOME[postIndex] = chosenPost
+    // // make the updates, then replace the original post with the copy at the index
+    // chosenPost.content = content
+    // DUMMY_POSTS_HOME[postIndex] = chosenPost
 
-    res.status(200).json({ message: "Updated post!", post: chosenPost, newContent: chosenPost.content, oldContent: oldContent })
+    // res.status(200).json({ message: "Updated post!", post: chosenPost, newContent: chosenPost.content, oldContent: oldContent })
 }
 
 // FIX — NOT DELETING BC NOT PROPERLY HANDLING ERROR??
 
-const deletePost = (req, res, next) => {
+const deletePost = async (req, res, next) => {
     // deletes chosen post, filtering through dummy data to find the post to omit
     // console logs for troubleshooting
 
-    let chosenPostID = req.params.postID
+    // let chosenPostID = req.params.postID
     // let chosenPost = Post.findById(post => post.postID === chosenPostID)
 
     // if (!chosenPost) {
@@ -257,15 +286,35 @@ const deletePost = (req, res, next) => {
 
     // console.log(`Found post: ${chosenPost}`)
 
-    Post.findByIdAndDelete({ _id: chosenPostID}, (err) => {
+    // Post.findByIdAndDelete({ _id: chosenPostID}, (err) => {
 
-        if (err) {
-            console.log(err)
-            throw new HttpError(err.message, 404)
-        }
+    //     if (err) {
+    //         console.log(err)
+    //         throw new HttpError(err.message, 404)
+    //     }
 
-        res.status(200).json({ message: "Deleted post!" })
-    })
+    //     res.status(200).json({ message: "Deleted post!" })
+    // })
+
+    const postToDelete = req.params.postID
+
+    try {
+        // post = await Post.findById(req.params.id)
+        // post.remove()
+
+        
+
+    } catch(err) {
+        console.log(err)
+        const error = new HttpError(
+            "Something went wrong, could not delete post.", 500
+        )
+
+        return next(error)
+    }
+
+
+    res.status(200).json({ message: "Deleted post."})
 }
 
 exports.createPost = createPost
