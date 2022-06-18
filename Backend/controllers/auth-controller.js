@@ -110,7 +110,7 @@ const login = async (req, res, next) => {
     }
 
     // else there were no issues
-    res.json({message: "Successfully logged in!", user: existingUser})
+    res.json({message: "Successfully logged in!", user: existingUser.toObject({ getters: true })})
 }
 
 exports.authPage = authPage
