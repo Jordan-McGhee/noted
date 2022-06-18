@@ -2,6 +2,7 @@ const HttpError = require("../models/http-error")
 const { validationResult } = require("express-validator")
 const Post = require("../models/posts-model")
 const Comment = require("../models/comments-model")
+const mongoose = require("mongoose")
 
 let DUMMY_POSTS_HOME = [
     { postID: "post1",
@@ -105,26 +106,29 @@ const createPost = async (req, res, next) => {
     }
 
     // use object destructuring to grab data from the incoming request body
-    const { user, content } = req.body
+    const { postCreator, content } = req.body
 
     // create an object with the values you need using post model
     const createdPost = new Post({
-        user, 
+        postCreator, 
         content
     })
 
     try{
-        const result = await createdPost.save()
+        await createdPost.save()
+        console.log("trying to create post!")
     } catch (err) {
         const error = new HttpError(
             "Creating post failed. Please try again!", 500
         )
 
+        console.log(err)
+
         return next(error)
     }
     
 
-    res.status(201).json({ result })
+    res.status(201).json({ message: "Created post!", post: createdPost })
 }
 
 // ADD THESE LATER ONCE WE HAVE AUTHENTICATED USERS
@@ -150,35 +154,84 @@ const addComment = async (req, res, next) => {
     // grab post ID from url
     const chosenPostID = req.params.postID
 
+    let commentedPost
+
+    try {
+        commentedPost = Post.findById(chosenPostID)
+        console.log(commentedPost)
+    } catch(err) {
+        const error = new HttpError(
+            "Creating comment failed. Please try again.", 500
+        )
+
+        next(error)
+    }
+
+    if (!commentedPost) {
+        const error = new HttpError(
+            "Could not find this post!", 404
+        )
+
+        next(error)
+    }
+
     // grab the info from the request body and save it to a new comment object
     const { user, content } = req.body
 
     const newComment = new Comment ({
         user,
-        content
+        content,
+        post: commentedPost
     })
 
-    // save our new comment to the DB, then attach it to the corresponding post using the ID from above
-    await newComment.save()
-        .then((result) => {
-            Post.findById(chosenPostID, (err, post) => {
-                // check to see if there is a post. If not, throw error and exit function
-                if (post) {
 
-                    // The below two lines will add the newly saved comment's 
-                    // ObjectID to the the Post's comments array field
-                    post.comments.push(newComment)
-                    post.save()
+    try {
 
-                    // return a response if successful
-                    res.status(201).json({ message: "Added new comment!", post: post.content, postComments: post.comments, comment: newComment.content })
-                } else {
-                    const error = new HttpError("Could not find this post!", 404)
+        // need to do multiple operations at once. If either fails, we want to cancel both and enter the catch block
+        // do this with transactions and sessions
+        // create the session and use the startTransaction method
 
-                    return next(error)
-                }
-        })
-    })
+        const session = await mongoose.startSession()
+        session.startTransaction()
+
+        // creates new comment and creates unique id for it. Have to pass the current session
+        await newComment.save({ session: session })
+
+        commentedPost.comments.push(newComment)
+        await commentedPost.save({ session: session })
+
+        // close the session only if all the above was successful
+        await session.commitTransaction()
+
+    } catch(err) {
+        const error = new HttpError(
+            "Creating comment failed. Please try again", 500
+        )
+
+        return next(error)
+    }
+
+    // // save our new comment to the DB, then attach it to the corresponding post using the ID from above
+    // await newComment.save()
+    //     .then((result) => {
+    //         Post.findById(chosenPostID, (err, post) => {
+    //             // check to see if there is a post. If not, throw error and exit function
+    //             if (post) {
+
+    //                 // The below two lines will add the newly saved comment's 
+    //                 // ObjectID to the the Post's comments array field
+    //                 post.comments.push(newComment)
+    //                 post.save()
+
+    //                 // return a response if successful
+    //                 res.status(201).json({ message: "Added new comment!", post: post.content, postComments: post.comments, comment: newComment.content })
+    //             } else {
+    //                 const error = new HttpError("Could not find this post!", 404)
+
+    //                 return next(error)
+    //             }
+    //     })
+    // })
 }
 
 const deleteComment = (req, res, next) => {
@@ -302,7 +355,7 @@ const deletePost = async (req, res, next) => {
         // post = await Post.findById(req.params.id)
         // post.remove()
 
-        
+
 
     } catch(err) {
         console.log(err)

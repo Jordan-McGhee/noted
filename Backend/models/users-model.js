@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
     image: { type: String, required: true},
     friends: Array,
     posts: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose .Types.ObjectId,
+        required: true,
         ref: "Post"
     }]
 })
