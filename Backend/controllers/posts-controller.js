@@ -164,7 +164,7 @@ const addComment = async (req, res, next) => {
             "Creating comment failed. Please try again.", 500
         )
 
-        next(error)
+        return next(error)
     }
 
     if (!commentedPost) {
@@ -172,7 +172,7 @@ const addComment = async (req, res, next) => {
             "Could not find this post!", 404
         )
 
-        next(error)
+        return next(error)
     }
 
     // grab the info from the request body and save it to a new comment object

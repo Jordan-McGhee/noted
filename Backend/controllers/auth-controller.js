@@ -2,6 +2,7 @@
 const { v4: uuidv4 } = require("uuid")
 const HttpError = require("../models/http-error")
 const { validationResult } = require("express-validator")
+const User = require("../models/users-model")
 
 const DUMMY_USERS = [
     { userID: "me", name: "Jordan McGhee", email: "me@test", password: "12345678", numberOfPosts: 31, numberOfFriends: 69 },
@@ -17,7 +18,7 @@ const authPage = (req, res, next) => {
 
 }
 
-const signUp = (req, res, next) => {
+const signUp = async (req, res, next) => {
 
     // looks into req object and checks for any validation errors that were picked up. Returns an object
     const errors = validationResult(req)
@@ -31,46 +32,85 @@ const signUp = (req, res, next) => {
     // use object destructuring to grab the necessary values from the user
     const { username, email, password } = req.body
 
-    // check if email is already in list of users
-    let hasUser = DUMMY_USERS.find(user => user.email === email)
+    // check if email is already used by another user
+    let existingUser 
+    
+    try {
+        existingUser = await User.findOne({ email: email })
 
-    if (hasUser) {
-        // has to be throw here instead of next(error) since it's not async
-        throw new HttpError("User already exists with that email! Want to sign in?", 422)
+    } catch (err) {
+        const error = new HttpError(
+            "Signing up failed. Please try again!", 500
+        )
+
+        return next(error)
     }
 
-    // create a new user with the given values from above and initialize the other variables 
-    const newUser = {
-        userID: uuidv4(),
+    if (existingUser) {
+        const error = new HttpError(
+            "User exists already, please login instead!", 422)
+    }
+
+    // saving plain password for now. Will encrypt later
+    const newUser = new User ({
         username,
         email,
-        password,
-        posts: [],
-        friends: []
+        password
+    })
+
+    try {
+        await newUser.save()
+    } catch (err) {
+        const error = new HttpError(
+            "Signing in failed. Please try again.", 500
+        )
+
+        return next(error)
     }
 
-    // push new user to dummy data
-    DUMMY_USERS.push(newUser)
-
     // response
-    res.json({message: "New user created!", user: newUser})
+    // getters: true turns the created object into a regular JS object
+    res.json({message: "New user created!", user: newUser.toObject({ getters: true })})
 }
 
-const login = (req, res, next) => {
+const login = async (req, res, next) => {
     // grab data from req body
     const { email, password } = req.body
 
-    // filter through list of existing users and find one with matching email (if possible)
-    let loggedInUser = DUMMY_USERS.filter(user => user.email === email)
+    // establish variable to check if user exists
+    let existingUser
 
-    // check if loggedInUser is falsey or if password doesn't match
-    if (!loggedInUser || loggedInUser.password !== password) {
-        // has to be throw here instead of next(error) since it's not async
-        throw new HttpError("Invalid credientials. Something's wrong here", 401)
+    // query DB for user with the email from req.body
+    try {
+        existingUser = await User.findOne({ email: email })
+    } catch (err) {
+        const error = new HttpError(
+            "Something went wrong trying to find the user. Please try again.", 500
+        )
+
+        return next(error)
     }
-    
+
+    // if existingUser is falsey, exit function and throw new error
+    if (!existingUser) {
+        const error = new HttpError(
+            "Could not find a user with that email. Maybe try signing up?", 401
+        )
+
+        return next(error)
+    }
+
+    // if password doesn't match, throw new error
+    if (existingUser.password !== password) {
+        const error = new HttpError(
+            "Invalid credentials. Something's wrong here.", 401
+        )
+
+        return next(error)
+    }
+
     // else there were no issues
-    res.json({message: "Successfully logged in!", user: loggedInUser})
+    res.json({message: "Successfully logged in!", user: existingUser})
 }
 
 exports.authPage = authPage
