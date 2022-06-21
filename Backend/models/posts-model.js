@@ -7,12 +7,11 @@ const postSchema = new mongoose.Schema({
         ref: "Comment"
     }],
     usersThatLikeThisPost: Array,
-    // postCreator: {
-    //     type: mongoose.Types.ObjectId,
-    //     required: true,
-    //     ref: "User"
-    // }
-    postCreator: { type: String, required: true}
+    postCreator: {
+        type: mongoose.Types.ObjectId,
+        required: true,
+        ref: "User"
+    }
 })
 
 // model function requires 2 arguments:

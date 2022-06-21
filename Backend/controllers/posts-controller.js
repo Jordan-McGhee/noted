@@ -1,8 +1,11 @@
 const HttpError = require("../models/http-error")
 const { validationResult } = require("express-validator")
+const mongoose = require("mongoose")
+
+// Models
+const User = require("../models/users-model")
 const Post = require("../models/posts-model")
 const Comment = require("../models/comments-model")
-const mongoose = require("mongoose")
 
 let DUMMY_POSTS_HOME = [
     { postID: "post1",
@@ -114,9 +117,47 @@ const createPost = async (req, res, next) => {
         content
     })
 
+    // check if user exists before saving
+    let user
+
+    try {
+        user = await User.findById(postCreator)
+    } catch(err) {
+        const error = new HttpError(
+            "Creating post failed. Please try again!", 500
+        )
+
+        return next(error)
+    }
+
+    // if not, exit function and create a new error
+    if (!user) {
+        const error = new HttpError(
+            "Could not find a user for the provided ID!", 404
+        )
+
+        return next(error)
+    }
+
+    // if there are no problems, save the post and add it to the user's posts with transactions/sessions
+
     try{
-        await createdPost.save()
-        console.log("trying to create post!")
+        // need to do multiple operations at once. If either fails, we want to cancel both and enter the catch block
+        // do this with transactions and sessions
+        // create the session and use the startTransaction method
+
+        const session = await mongoose.startSession()
+        session.startTransaction()
+
+        // creates new post and creates unique id for it. Have to pass the current session
+        await createdPost.save({ session: session })
+
+        user.posts.push(createdPost)
+        await user.save({ session: session })
+
+        // close the session only if all the above was successful
+        await session.commitTransaction()
+
     } catch (err) {
         const error = new HttpError(
             "Creating post failed. Please try again!", 500
@@ -128,7 +169,7 @@ const createPost = async (req, res, next) => {
     }
     
 
-    res.status(201).json({ message: "Created post!", post: createdPost })
+    res.status(201).json({ message: "Created post!", post: createdPost, user: user, userPosts: user.posts })
 }
 
 // ADD THESE LATER ONCE WE HAVE AUTHENTICATED USERS
