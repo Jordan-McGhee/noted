@@ -25,8 +25,9 @@ const signUp = async (req, res, next) => {
 
     // check to see if there are any errors and throw error if so
     if (!errors.isEmpty()) {
-        console.log(errors)
-        throw new HttpError("There's something wrong with the information you entered. Please check your inputs.", 401)
+        return next(
+            new HttpError("There's something wrong with the information you entered. Please check your inputs.", 401)
+        )
     }
 
     // use object destructuring to grab the necessary values from the user
@@ -49,6 +50,8 @@ const signUp = async (req, res, next) => {
     if (existingUser) {
         const error = new HttpError(
             "User exists already, please login instead!", 422)
+
+        return next(error)
     }
 
     // saving plain password for now. Will encrypt later
