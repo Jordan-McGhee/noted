@@ -368,45 +368,54 @@ const editPost = async (req, res, next) => {
 // FIX — NOT DELETING BC NOT PROPERLY HANDLING ERROR??
 
 const deletePost = async (req, res, next) => {
-    // deletes chosen post, filtering through dummy data to find the post to omit
-    // console logs for troubleshooting
+    const postID = req.params.postID
 
-    // let chosenPostID = req.params.postID
-    // let chosenPost = Post.findById(post => post.postID === chosenPostID)
-
-    // if (!chosenPost) {
-    //     throw new HttpError("Could not find this post!", 404)
-    // }
-
-    // console.log(`Found post: ${chosenPost}`)
-
-    // Post.findByIdAndDelete({ _id: chosenPostID}, (err) => {
-
-    //     if (err) {
-    //         console.log(err)
-    //         throw new HttpError(err.message, 404)
-    //     }
-
-    //     res.status(200).json({ message: "Deleted post!" })
-    // })
-
-    const postToDelete = req.params.postID
+    let post
 
     try {
-        // post = await Post.findById(req.params.id)
-        // post.remove()
-
-
-
+        // .populate() gives access to a document stored in another collection (i.e. User) and work with data in that collection since we have the ref attribute in the models
+        // grab the appropriate property from our post model (postCreator) and mongoose will then search through the associated ID and give access to all of its data and allows us to change it
+        post = await Post.findById(postID).populate('postCreator')
     } catch(err) {
-        console.log(err)
         const error = new HttpError(
-            "Something went wrong, could not delete post.", 500
+            "Something went wrong, could not delete post", 500
         )
-
         return next(error)
     }
 
+    if (!post) {
+        const error = new HttpError(
+            "Could not find this post. Please try again!", 404
+        )
+        return next(error)
+    }
+
+    // similar to creating the post, we need a session/transactions that will commit only if both deleting the post and removing it from the user's array are successful
+    try{
+
+        const session = await mongoose.startSession()
+        session.startTransaction()
+
+        // removes post. Have to pass the current session
+        await post.remove({ session: session })
+
+        // need to remove the post from the user and save the updated user
+        // can do these because populate gave us full user object linked to this post
+        post.postCreator.posts.pull(post)
+        await post.postCreator.save({ session: session })
+
+        // close the session only if all the above was successful
+        await session.commitTransaction()
+
+    } catch (err) {
+        const error = new HttpError(
+            "Deleting post failed. Please try again!", 500
+        )
+
+        console.log(err)
+
+        return next(error)
+    }
 
     res.status(200).json({ message: "Deleted post."})
 }
