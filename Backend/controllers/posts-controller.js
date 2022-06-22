@@ -322,7 +322,7 @@ const editPost = async (req, res, next) => {
         post = await Post.findById(req.params.postID)
     } catch (err) {
         const error = new HttpError(
-            "Something went wrong. Could not update place!", 500
+            "Something went wrong. Could not update post!", 500
         )
         return next(error)
     }
@@ -339,33 +339,7 @@ const editPost = async (req, res, next) => {
     } 
 
     res.status(200).json({ post: post.toObject({ getters: true })})
-
-    // Changing data like this is bad practice because an async task may fail and not all data will be updated correctly
-    // chosenPost.content = content
-
-    // correct way to update an object via patch request:
-    // create a copy of the item, change the copy, and only when it's finished changing, replace the original with the updated copy
-    // create copy with the spread (...) operator, find that post's index in the dummy array
-
-    // const chosenPost = { ...DUMMY_POSTS_HOME.find(post => post.postID === chosenPostID) }
-    // const postIndex = DUMMY_POSTS_HOME.findIndex(post => post.postID === chosenPostID)
-
-    // check to see if there is a post. If not, throw error and exit function
-    // if (!chosenPost) {
-    //     throw new HttpError("Could not find this post!", 404)
-    // }
-
-    // grabbed old content of post for troubleshooting
-    // let oldContent = chosenPost.content
-
-    // // make the updates, then replace the original post with the copy at the index
-    // chosenPost.content = content
-    // DUMMY_POSTS_HOME[postIndex] = chosenPost
-
-    // res.status(200).json({ message: "Updated post!", post: chosenPost, newContent: chosenPost.content, oldContent: oldContent })
 }
-
-// FIX — NOT DELETING BC NOT PROPERLY HANDLING ERROR??
 
 const deletePost = async (req, res, next) => {
     const postID = req.params.postID
