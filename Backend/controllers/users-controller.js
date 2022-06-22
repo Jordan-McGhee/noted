@@ -1,5 +1,5 @@
 const HttpError = require("../models/http-error")
-// const User = require("../models/users-model")
+const User = require("../models/users-model")
 
 // DUMMY DATA
 const DUMMY_USERS = [
@@ -89,26 +89,33 @@ const DUMMY_POSTS_PROFILE = [
 // Finds the user by ID out of all users in DB
 // then finds all posts by that user
 
-const getUserByID = (req, res, next) => {
+const getUserByID = async (req, res, next) => {
 
     // grabs userID from URL and finds that user from DB/Dummy data
-    const userID = req.params.userID
-    const user = DUMMY_USERS.find(user => {
-        return user.userID === userID
-    })
+    const username = req.params.username
+
+    let user
+
+    try {
+        user = await User.findOne({ username: username })
+    } catch(err) {
+        const error = new HttpError(
+            "Something went wrong finding that user. Please try again!", 500
+        )
+
+        return next(error)
+    }
 
     // error handling for if there isn't a user
     // creates a new HttpError object and passes it via next for the middleware in our server.js file
     if (!user) {
-        return next(new HttpError("Could not find a user with this ID.", 404))
+        return next(new HttpError("Could not find a user with this username.", 404))
     }
 
     // searches for posts by specific user. Filter returns an empty array, so if the length is 0, we set posts to a default statement
-    let posts = DUMMY_POSTS_PROFILE.filter(post => {
-        return post.user.name === user.name
-    })
 
-    if (posts.length === 0) {
+    let posts 
+    if (user.posts.length === 0) {
         posts = "This user has no posts!"
     }
 
