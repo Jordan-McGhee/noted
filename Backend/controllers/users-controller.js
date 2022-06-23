@@ -86,6 +86,7 @@ const DUMMY_POSTS_PROFILE = [
     { postID: "post8", user: { name: "Jordan McGhee", email: "test@test"}, content: "This is Ballin C's test post", date: "placeholder for date text"}
 ]
 
+
 // Finds the user by ID out of all users in DB
 // then finds all posts by that user
 
