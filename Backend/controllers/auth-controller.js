@@ -4,16 +4,6 @@ const HttpError = require("../models/http-error")
 const { validationResult } = require("express-validator")
 const User = require("../models/users-model")
 
-const DUMMY_USERS = [
-    { userID: "me", name: "Jordan McGhee", email: "me@test", password: "12345678", numberOfPosts: 31, numberOfFriends: 69 },
-    { userID: "friend1", name: "Chris McGhee", email: "test4@test", password: "12345678", numberOfPosts: 31, numberOfFriends: 69 },
-    { userID: "friend2", name: "Tori McGhee", email: "test1@test", password: "12345678", numberOfPosts: 31, numberOfFriends: 69 },
-    { userID: "friend3", name: "Rhonda McGhee", email: "test2@test", password: "12345678",  numberOfPosts: 31, numberOfFriends: 69 },
-    { userID: "friend4", name: "Thomas McGhee", email: "test3@test", password: "12345678", numberOfPosts: 31, numberOfFriends: 69 },
-    { userID: "friend5", name: "Christopher McGhee", email: "test5@test", password: "12345678", numberOfPosts: 31, numberOfFriends: 69 },
-    { userID: "friend6", name: "Reid McGhee", email: "test6@test", password: "12345678", numberOfPosts: 31, numberOfFriends: 69 }
-]
-
 const authPage = (req, res, next) => {
 
 }

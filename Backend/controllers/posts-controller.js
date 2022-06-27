@@ -7,96 +7,6 @@ const User = require("../models/users-model")
 const Post = require("../models/posts-model")
 const Comment = require("../models/comments-model")
 
-let DUMMY_POSTS_HOME = [
-    { postID: "post1",
-    user:
-        { name: "Jordan McGhee", email: "test@test", userID: "me" },
-    content: "This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post This is a test post ",
-    date: "placeholder for date text",
-    comments: [
-        {
-            user: { name: "Jordan McGhee", email: "test@test", userID: "me" },
-            commentID: 'comment13',
-            content: "This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment"
-        },
-        {
-            user: { name: "Jordan McGhee", email: "test@test", userID: "me" },
-            commentID: 'comment14',
-            content: "This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment"
-        },
-        {
-            user: { name: "Jordan McGhee", email: "test@test", userID: "me" },
-            commentID: 'comment15',
-            content: "This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment"
-        },
-        {
-            user: { name: "Jordan McGhee", email: "test@test", userID: "me" },
-            commentID: 'comment16',
-            content: "This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment"
-        },
-    ]},
-    { postID: "post2", user: { name: "Tori McGhee", email: "test@test", userID: "friend2"}, content: "This is not a test post", date: "placeholder for date text", comments: [
-        {
-            user: { name: "Jordan McGhee", email: "test@test", userID: "me" },
-            commentID: 'comment17',
-            content: "This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment"
-        },
-        {
-            user: { name: "Jordan McGhee", email: "test@test", userID: "me" },
-            commentID: 'comment18',
-            content: "This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment"
-        },
-        {
-            user: { name: "Jordan McGhee", email: "test@test", userID: "me" },
-            commentID: 'comment19',
-            content: "This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment"
-        },
-        {
-            user: { name: "Jordan McGhee", email: "test@test", userID: "me" },
-            commentID: 'comment20',
-            content: "This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment"
-        },
-    ]},
-    { postID: "post3", user: { name: "Rhonda McGhee", email: "test@test", userID: "friend3"}, content: "This is Mom's test post", date: "placeholder for date text", comments: [
-        {
-            user: { name: "Jordan McGhee", email: "test@test", userID: "me" },
-            commentID: 'comment21',
-            content: "This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment"
-        },
-        {
-            user: { name: "Jordan McGhee", email: "test@test", userID: "me" },
-            commentID: 'comment22',
-            content: "This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment"
-        },
-        {
-            user: { name: "Jordan McGhee", email: "test@test", userID: "me" },
-            commentID: 'comment23',
-            content: "This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment"
-        },
-        {
-            user: { name: "Jordan McGhee", email: "test@test", userID: "me" },
-            commentID: 'comment24',
-            content: "This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment"
-        },
-    ]},
-    { postID: "post4", user: { name: "Thomas McGhee", email: "test@test", userID: "friend4"}, content: "This is Dad's test post", date: "placeholder for date text"},
-    { postID: "post5", user: { name: "Chris McGhee", email: "test@test", userID: "friend1"}, content: "This is Ballin C's test post", date: "placeholder for date text"},
-    { postID: "post6", user: { name: "Rhonda McGhee", email: "test@test", userID: "friend3"}, content: "This is Mom's test again post", date: "placeholder for date text"},
-    { postID: "post7", user: { name: "Thomas McGhee", email: "test@test", userID: "friend4"}, content: "This is Dad's test again post", date: "placeholder for date text"},
-    { postID: "post8", user: { name: "Chris McGhee", email: "test@test", userID: "friend1"}, content: "This is Ballin C's test again post", date: "placeholder for date text", comments: [
-        {
-            user: { name: "Jordan McGhee", email: "test@test", userID: "me" },
-            commentID: 'comment13',
-            content: "This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment"
-        },
-        {
-            user: { name: "Jordan McGhee", email: "test@test", userID: "me" },
-            commentID: 'comment14',
-            content: "This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment This is a comment"
-        }
-    ]}
-]
-
 const createPost = async (req, res, next) => {
 
     // looks into req object and checks for any validation errors that were picked up. Returns an object
@@ -181,7 +91,9 @@ const removeLike = (req, res, next) => {
 
 }
 
-// ADD TRY CATCH BLOCKS??
+// ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
 const addComment = async (req, res, next) => {
     // looks into req object and checks for any validation errors that were picked up. Returns an object
     const errors = validationResult(req)
@@ -330,8 +242,6 @@ const deleteComment = async (req, res, next) => {
 
     res.status(200).json({ message: "Deleted comment!", post: post, postComments: post.comments })
 }
-
-// ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 const editPost = async (req, res, next) => {
 
