@@ -2,8 +2,12 @@ const mongoose = require("mongoose")
 
 // need to change user to the correct type once users are added
 const commentSchema = new mongoose.Schema({
-    user: { type: String, required: true },
-    post: {
+    commentCreator: {
+        type: mongoose .Types.ObjectId,
+        required: true,
+        ref: "User"
+    },
+    commentedPost: {
         type: mongoose.Types.ObjectId,
         required: true,
         ref: "Post"

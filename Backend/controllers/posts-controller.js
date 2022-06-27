@@ -193,13 +193,14 @@ const addComment = async (req, res, next) => {
     }
 
     // grab post ID from url
-    const chosenPostID = req.params.postID
+    const postID = req.params.postID
 
-    let commentedPost
+    // variable to keep track of post that's being commented on
+    let post
 
+    // try to find that post by id
     try {
-        commentedPost = Post.findById(chosenPostID)
-        console.log(commentedPost)
+        post = await Post.findById(postID)
     } catch(err) {
         const error = new HttpError(
             "Creating comment failed. Please try again.", 500
@@ -208,7 +209,8 @@ const addComment = async (req, res, next) => {
         return next(error)
     }
 
-    if (!commentedPost) {
+    // error if we can't find that post and exit out of the function
+    if (!post) {
         const error = new HttpError(
             "Could not find this post!", 404
         )
@@ -216,89 +218,117 @@ const addComment = async (req, res, next) => {
         return next(error)
     }
 
-    // grab the info from the request body and save it to a new comment object
-    const { user, content } = req.body
+    // object destructuring to grab data from request body
+    const { commentCreator, content } = req.body
 
-    const newComment = new Comment ({
-        user,
+    // create new comment object with values from above
+    const createdComment = new Comment({
+        commentCreator,
         content,
-        post: commentedPost
+        commentedPost: post
     })
 
+    // check if user exists before saving
+    let user
 
     try {
-
-        // need to do multiple operations at once. If either fails, we want to cancel both and enter the catch block
-        // do this with transactions and sessions
-        // create the session and use the startTransaction method
-
-        const session = await mongoose.startSession()
-        session.startTransaction()
-
-        // creates new comment and creates unique id for it. Have to pass the current session
-        await newComment.save({ session: session })
-
-        commentedPost.comments.push(newComment)
-        await commentedPost.save({ session: session })
-
-        // close the session only if all the above was successful
-        await session.commitTransaction()
-
+        user = await User.findById(commentCreator)
     } catch(err) {
         const error = new HttpError(
-            "Creating comment failed. Please try again", 500
+            "Creating post failed. Please try again!", 500
         )
 
         return next(error)
     }
 
-    // // save our new comment to the DB, then attach it to the corresponding post using the ID from above
-    // await newComment.save()
-    //     .then((result) => {
-    //         Post.findById(chosenPostID, (err, post) => {
-    //             // check to see if there is a post. If not, throw error and exit function
-    //             if (post) {
+    // if not, exit function and create a new error
+    if (!user) {
+        const error = new HttpError(
+            "Could not find a user for the provided ID!", 404
+        )
 
-    //                 // The below two lines will add the newly saved comment's 
-    //                 // ObjectID to the the Post's comments array field
-    //                 post.comments.push(newComment)
-    //                 post.save()
+        return next(error)
+    }
 
-    //                 // return a response if successful
-    //                 res.status(201).json({ message: "Added new comment!", post: post.content, postComments: post.comments, comment: newComment.content })
-    //             } else {
-    //                 const error = new HttpError("Could not find this post!", 404)
+    // if there are no problems, save the comment, add it to the post's comment array
 
-    //                 return next(error)
-    //             }
-    //     })
-    // })
+    try {
+        // doing multiple operations at once, so need session/transaction to make sure all are successful before saving
+        const session = await mongoose.startSession()
+        session.startTransaction()
+
+        await createdComment.save({ session: session })
+
+        post.comments.push(createdComment)
+        await post.save({ session: session })
+
+        await session.commitTransaction()
+
+    } catch (err) {
+
+        const error = new HttpError(
+            "Creating comment failed. Please try again!", 500
+        )
+        console.log(err)
+
+        return next(error)
+    }
+    
+
+    res.status(201).json({ message: "Added comment!", post: post, user: user, postComments: post.comments, comment: createdComment.message })
 }
 
-const deleteComment = (req, res, next) => {
-    // deletes chosen comment, filtering through all comments to find the one to omit
+const deleteComment = async (req, res, next) => {
+    // grab IDs from url
+    const postID = req.params.postID
+    const commentID = req.params.commentID
 
-    // find the correct post with ID from params
-    let chosenPostID = req.params.postID
-    let chosenPost = DUMMY_POSTS_HOME.find(post => post.postID === chosenPostID)
+    // variables to keep track of the objects we query the DB for
+    let post
+    let comment
 
-    // make sure the post exists
-    if (!chosenPost) {
-        throw new HttpError("Could not find this post!", 404)
+    // try/catch blocks to query for the objects
+    try {
+        post = await Post.findById(postID)
+    } catch(err) {
+        const error = new HttpError(
+            "Something went wrong, couldn't find the post!", 500
+        )
+
+        return next(error)
     }
 
-    // do the same process for the comment
-    let chosenCommentID = req.params.commentID
-    let chosenComment = chosenPost.comments.find(comment => comment.commentID = chosenCommentID)
+    try {
+        comment = await Comment.findById(commentID)
+    } catch(err) {
+        const error = new HttpError(
+            "Something went wrong, couldn't find the comment!", 500
+        )
 
-    if (!chosenComment) {
-        throw new HttpError("Could not find this comment!", 404)
+        return next(error)
     }
 
-    // filter the posts comments to exclude the chosen comment
-    chosenPost.comments = chosenPost.comments.filter(comment => comment.commentID !== chosenCommentID)
+    // try/catch to run a session to delete the comment and save the associated post
+    try {
 
-    res.status(200).json({ message: "Deleted comment!", postComments: chosenPost.comments, deletedComment: chosenComment.content })
+        const session = await mongoose.startSession()
+        session.startTransaction()
+
+        await comment.remove({ session: session })
+
+        post.comments.pull(comment)
+        await post.save({ session: session })
+
+        await session.commitTransaction()
+    } catch (err) {
+        const error = new HttpError(
+            "Deleting comment failed. Please try again!", 500
+        )
+
+        return next(error)
+    }
+
+    res.status(200).json({ message: "Deleted comment!", post: post, postComments: post.comments })
 }
 
 // ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -322,7 +352,7 @@ const editPost = async (req, res, next) => {
         post = await Post.findById(req.params.postID)
     } catch (err) {
         const error = new HttpError(
-            "Something went wrong. Could not update post!", 500
+            "Something went wrong. Could not find that post!", 500
         )
         return next(error)
     }
@@ -333,7 +363,7 @@ const editPost = async (req, res, next) => {
         await post.save()
     } catch(err) {
         const error = new HttpError(
-            "Something went wrong. Could not update place!", 500
+            "Something went wrong. Could not update post!", 500
         )
         return next(error)
     } 

@@ -98,7 +98,7 @@ router.post("/:postID/removeLike", postsControllers.removeLike)
 
 router.post("/:postID/addComment", check("content").not().isEmpty(), postsControllers.addComment)
 
-router.delete("/:postID/:commentID", postsControllers.deleteComment)
+router.delete("/:postID/comment/:commentID", postsControllers.deleteComment)
 
 router.patch("/:postID", check("content").isLength({min: 5}), postsControllers.editPost)
 
