@@ -5,7 +5,7 @@ const mongoose = require("mongoose")
 
 // FOR CONNECTING TO MONGODB SERVER
 const password = "CdsiLNos7MAaIdiu"
-const url = `mongodb+srv://JordanMcGhee:${password}@noted.yrfz0c3.mongodb.net/?retryWrites=true&w=majority`
+const url = `mongodb+srv://JordanMcGhee:${password}@noted.yrfz0c3.mongodb.net/noted?retryWrites=true&w=majority`
 
 // connecting to database
 mongoose.connect(url).then(() =>{

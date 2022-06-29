@@ -1,5 +1,5 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom'
+import React, { useState, useCallback } from 'react';
+import { Route, Routes, Navigate } from 'react-router-dom'
 
 import './App.css';
 import MainNav from './Components/Nav/MainNav';
@@ -7,6 +7,7 @@ import Auth from './Pages/Auth/Auth';
 import Friends from './Pages/Friends/Friends';
 import HomePage from './Pages/Home/Pages/HomePage';
 import Profile from './Pages/Profile/Profile';
+import { AuthContext } from "./Context/auth-context"
 
 function App() {
 
@@ -20,20 +21,51 @@ function App() {
     { userID: "friend6", name: "Reid McGhee", email: "test6@test", numberOfPosts: 31, numberOfFriends: 69 }
 ]
 
+
+  // manage whether we are logged in or not app-wide with useState
+  const [ isLoggedIn, setIsLoggedIn ] = useState(false)
+
+  // useCallback so these functions are only called once
+  const login = useCallback(() => {
+    setIsLoggedIn(true)
+  }, [])
+  
+  const logout = useCallback(() => {
+    setIsLoggedIn(false)
+  }, [])
+
+  let routes
+
+  if (isLoggedIn) {
+    routes = (
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="user/:userID/friends" element = {<Friends />} />
+        <Route path="user/:userID" element = {<Profile />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    )
+  } else {
+    routes = (
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="auth" element = {<Auth />} />
+        <Route path="*" element={<Navigate to="/auth" replace />} />
+      </Routes>
+    )
+  }
+
   return (
 
       <div className="App">
         
-        <MainNav />
+        {/* pass the values of our functions to our auth-context file with the value prop */}
+        <AuthContext.Provider value= { { isLoggedIn, login, logout} } >
 
-        <Routes>
+          <MainNav />
+          { routes }
 
-          <Route path="/" element={<HomePage />} />
-          <Route path="auth" element = {<Auth />} />
-          <Route path="user/:userID/friends" element = {<Friends />} />
-          <Route path="user/:userID" element = {<Profile />} />
-
-        </Routes>
+        </AuthContext.Provider>
 
       </div>
 

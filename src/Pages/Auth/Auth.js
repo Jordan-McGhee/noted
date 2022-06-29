@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../../Context/auth-context";
 
 import "./Auth.css"
 
@@ -16,6 +17,8 @@ const Auth = () => {
     // ERROR HANDLING
     // ONCHANGE & ONBLUR HANDLERS
     // STATES OR REFS FOR INPUTS
+
+    const auth = useContext(AuthContext)
 
     const [ isLoggingIn, setIsLoggingIn ] = useState(true)
     
@@ -69,8 +72,7 @@ const Auth = () => {
 
     const formSubmitHandler = (event) => {
         event.preventDefault()
-
-
+        auth.login()
     }
 
     return (
