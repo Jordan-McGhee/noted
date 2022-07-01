@@ -12,14 +12,13 @@ const Auth = () => {
     // SUBMIT HANDLER FUNCTION --done
     // CONDITIONAL RENDERING OF FORM BEFORE RETURN STATEMENT 
     
-    
     // NEXT
     // VALIDATE FORM INPUTS
     // ERROR HANDLING
     // ONCHANGE & ONBLUR HANDLERS
     // STATES OR REFS FOR INPUTS
 
-    const auth = useContext(AuthContext)
+    const authContext = useContext(AuthContext)
 
     const [ isLoggingIn, setIsLoggingIn ] = useState(true)
     
@@ -30,13 +29,13 @@ const Auth = () => {
             <div>
 
                 <div className="form-field">
-                    <label>Username/Email</label>
-                    <input type="text" />
+                    <label htmlFor="email" >Email</label>
+                    <input type="text" name="email"/>
                 </div>
 
                 <div className="form-field">
                     <label>Password</label>
-                    <input type="password" minLength="6" />
+                    <input type="password" minLength="6" name="password" />
                 </div>
                 
             </div>
@@ -47,17 +46,17 @@ const Auth = () => {
                 
                 <div className="form-field">
                     <label>Username</label>
-                    <input type="text" />
+                    <input type="text" name="username" />
                 </div>
 
                 <div className="form-field">
-                    <label>Email</label>
-                    <input type="text" />
+                    <label htmlFor="email">Email</label>
+                    <input type="text" name="email" />
                 </div>
 
                 <div className="form-field">
                     <label>Password</label>
-                    <input type="password" minLength="6" />
+                    <input type="password" minLength="6" name="password" />
                 </div>
                 
             </div>
@@ -71,9 +70,33 @@ const Auth = () => {
         }
     }
 
-    const formSubmitHandler = (event) => {
+    const formSubmitHandler = async (event) => {
         event.preventDefault()
-        auth.login()
+
+        if (isLoggingIn) {
+
+        } else {
+            try {
+                const response = await fetch('http://localhost:5000/auth/signup', {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': "application/json"
+                    },
+                    body: JSON.stringify({
+                        username: event.username.value,
+                        email: event.email.value,
+                        password: event.password.value
+                    })
+                })
+
+                const responseData = await response.json()
+                console.log(responseData)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        authContext.login()
     }
 
     return (
