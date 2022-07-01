@@ -17,6 +17,7 @@ const Auth = () => {
     // ERROR HANDLING --done
     // ONCHANGE & ONBLUR HANDLERS --done
     // STATES OR REFS FOR INPUTS --done
+    // STYLING BASED ON FORM VALIDITY
 
     const authContext = useContext(AuthContext)
 
@@ -178,7 +179,28 @@ const Auth = () => {
 
         if (isLoggingIn) {
 
+            try{
+                const response = await fetch('http://localhost:5000/auth/login', {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': "application/json"
+                    },
+                    body: JSON.stringify({
+                        email: enteredEmail,
+                        password: enteredPassword
+                    })
+                })
+
+                const responseData = await response.json()
+                console.log(responseData)
+
+            } catch(err) {
+                console.log(err)
+            }
+
+
         } else {
+
             try {
                 const response = await fetch('http://localhost:5000/auth/signup', {
                     method: "POST",
