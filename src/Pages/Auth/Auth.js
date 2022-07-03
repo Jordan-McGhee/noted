@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../../Context/auth-context";
+import LoadingSpinner from "../../Components/UI/LoadingSpinner"
 
 import "./Auth.css"
 
@@ -22,6 +23,8 @@ const Auth = () => {
     const authContext = useContext(AuthContext)
 
     const [ isLoggingIn, setIsLoggingIn ] = useState(true)
+    const [ isLoading, setIsLoading ] = useState(false)
+    const [ error, setError ] = useState()
 
     // STATES FOR LOGIN/SIGNUP FORM INPUTS TO TRACK VALUES
     const [ enteredUsername, setEnteredUsername ] = useState("")
@@ -180,6 +183,7 @@ const Auth = () => {
         if (isLoggingIn) {
 
             try{
+                setIsLoading(true)
                 const response = await fetch('http://localhost:5000/auth/login', {
                     method: "POST",
                     headers: {
@@ -194,14 +198,19 @@ const Auth = () => {
                 const responseData = await response.json()
                 console.log(responseData)
 
+                setIsLoading(false)
+                authContext.login()
+
             } catch(err) {
                 console.log(err)
+                setError(err.message || "Something went wrong. Please try logging in again!")
             }
 
 
         } else {
 
             try {
+                setIsLoading(true)
                 const response = await fetch('http://localhost:5000/auth/signup', {
                     method: "POST",
                     headers: {
@@ -216,17 +225,21 @@ const Auth = () => {
 
                 const responseData = await response.json()
                 console.log(responseData)
+
+                setIsLoading(false)
+                authContext.login()
             } catch (err) {
                 console.log(err)
+                setError(err.message || "Something went wrong. Please try signing up again!")
             }
         }
 
         resetFormHandler()
-        authContext.login()
     }
 
     return (
         <div>
+            { isLoading && <LoadingSpinner asOverlay />}
 
             <p className="auth-p">
                 { isLoggingIn ? "Login" : "Signup"}
