@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../../Context/auth-context";
 import LoadingSpinner from "../../Components/UI/LoadingSpinner"
+import ErrorModal from "../../Components/UI/ErrorModal";
 
 import "./Auth.css"
 
@@ -198,14 +199,17 @@ const Auth = () => {
                 const responseData = await response.json()
                 console.log(responseData)
 
-                setIsLoading(false)
+                // checks to see if the code associated with the response is 200ish. If not, we need to go to the catch block. Doesn't happen on its own because a 400 or 500ish response code is still considered a response, not an error
+                if (!response.ok) {
+                    throw new Error(responseData.message)
+                }
+
                 authContext.login()
 
             } catch(err) {
                 console.log(err)
                 setError(err.message || "Something went wrong. Please try logging in again!")
             }
-
 
         } else {
 
@@ -226,38 +230,47 @@ const Auth = () => {
                 const responseData = await response.json()
                 console.log(responseData)
 
-                setIsLoading(false)
+                // checks to see if the code associated with the response is 200ish. If not, we need to go to the catch block. Doesn't happen on its own because a 400 or 500ish response code is still considered a response, not an error
+                if (!response.ok) {
+                    throw new Error(responseData.message)
+                }
+
                 authContext.login()
             } catch (err) {
                 console.log(err)
                 setError(err.message || "Something went wrong. Please try signing up again!")
             }
         }
-
+        
+        setIsLoading(false)
         resetFormHandler()
     }
 
     return (
-        <div>
-            { isLoading && <LoadingSpinner asOverlay />}
+        <React.Fragment>
+            { error && <ErrorModal error = { error } onClear = { () => setError(null) } />}
+            <div>
+                { isLoading && <LoadingSpinner asOverlay />}
 
-            <p className="auth-p">
-                { isLoggingIn ? "Login" : "Signup"}
-            </p>
+                <p className="auth-p">
+                    { isLoggingIn ? "Login" : "Signup"}
+                </p>
 
-            <form onSubmit={ formSubmitHandler } className = "auth-form">
-                
-                { loginForm }
+                <form onSubmit={ formSubmitHandler } className = "auth-form">
+                    
+                    { loginForm }
 
-                <div>
-                    <button type='submit' className="auth-form-button" disabled = { !formIsValid } onClick={ () => console.log("Clicked!")}>
-                        { isLoggingIn ? "Login" : "Signup" }
-                    </button>
+                    <div>
+                        <button type='submit' className="auth-form-button" disabled = { !formIsValid } onClick={ () => console.log("Clicked!")}>
+                            { isLoggingIn ? "Login" : "Signup" }
+                        </button>
 
-                    <p onClick={ changeLoginHandler } className="switch-state-p">{ isLoggingIn ? "I need an Account" : "I already have an account"}</p>
-                </div>
-            </form>
-        </div>
+                        <p onClick={ changeLoginHandler } className="switch-state-p">{ isLoggingIn ? "I need an Account" : "I already have an account"}</p>
+                    </div>
+                </form>
+            </div>
+
+        </React.Fragment>
     )
 }
 
