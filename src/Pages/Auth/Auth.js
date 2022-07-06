@@ -18,10 +18,6 @@ const Auth = () => {
     // ONCHANGE & ONBLUR HANDLERS --done
     // STATES OR REFS FOR INPUTS --done
 
-    // NEXT
-    // STYLING BASED ON FORM VALIDITY
-    // ADD MODAL ELEMENT
-
     const authContext = useContext(AuthContext)
 
     const [ isLoggingIn, setIsLoggingIn ] = useState(true)
