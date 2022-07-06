@@ -13,13 +13,14 @@ const Auth = () => {
     // STATE CHANGE HANDLER FOR WHEN BUTTON TO SWITCH IS PRESSED  --done
     // SUBMIT HANDLER FUNCTION --done
     // CONDITIONAL RENDERING OF FORM BEFORE RETURN STATEMENT --done
-    
-    // NEXT
     // VALIDATE FORM INPUTS --done
     // ERROR HANDLING --done
     // ONCHANGE & ONBLUR HANDLERS --done
     // STATES OR REFS FOR INPUTS --done
+
+    // NEXT
     // STYLING BASED ON FORM VALIDITY
+    // ADD MODAL ELEMENT
 
     const authContext = useContext(AuthContext)
 
@@ -66,7 +67,7 @@ const Auth = () => {
     }
 
 
-    // value change handlers
+    // INPUT VALUE CHANGE HANDLERS
     const usernameChangeHandler = event => {
         setEnteredUsername(event.target.value)
     }
@@ -79,7 +80,7 @@ const Auth = () => {
         setEnteredPassword(event.target.value)
     }
 
-    // input blur handlers
+    // INPUT BLUR HANDLERS
     const usernameBlurHandler = () => {
         setUsernameTouched(true)
     }
@@ -92,7 +93,7 @@ const Auth = () => {
         setPasswordTouched(true)
     }
 
-    // reset form handler
+    // RESET FORM HANDLER
     const resetFormHandler = () => {
         setEnteredUsername("")
         setEnteredEmail("")
@@ -104,7 +105,7 @@ const Auth = () => {
     }
     
 
-    // establish form variable and store different version in form depending on logging in or signing up
+    // establish form variable and store different version of form depending on if the user is logging in or signing up
     let loginForm
 
     if (isLoggingIn) {
@@ -165,10 +166,10 @@ const Auth = () => {
     const changeLoginHandler = () => {
         if (isLoggingIn) {
             setIsLoggingIn(false)
-            resetFormHandler()
+            // resetFormHandler()
         } else {
             setIsLoggingIn(true)
-            resetFormHandler()
+            // resetFormHandler()
         }
     }
 
@@ -183,19 +184,24 @@ const Auth = () => {
 
         if (isLoggingIn) {
 
+            // set loading state to true so spinner shows up
+            setIsLoading(true)
+
             try{
-                setIsLoading(true)
+                // LOGIN FETCH FUNCTION
                 const response = await fetch('http://localhost:5000/auth/login', {
                     method: "POST",
                     headers: {
                         'Content-Type': "application/json"
                     },
+                    // .STRINGIFY() CONVERTS BODY DATA INTO JSON FOR BACKEND TO USE
                     body: JSON.stringify({
                         email: enteredEmail,
                         password: enteredPassword
                     })
                 })
 
+                // .JSON() TURNS THE RESPONSE INTO JSON DATA
                 const responseData = await response.json()
                 console.log(responseData)
 
@@ -204,6 +210,7 @@ const Auth = () => {
                     throw new Error(responseData.message)
                 }
 
+                // LOGS IN AND REDIRECTS USER TO THEIR HOME PAGE
                 authContext.login()
 
             } catch(err) {
@@ -214,7 +221,7 @@ const Auth = () => {
         } else {
 
             try {
-                setIsLoading(true)
+                
                 const response = await fetch('http://localhost:5000/auth/signup', {
                     method: "POST",
                     headers: {
