@@ -11,10 +11,10 @@ const FriendItem = props => {
     return (
         <Card>
 
-            <Link to={`/user/${props.user.userID}`}>
+            <Link to={`/user/${props.user.username}`}>
                 <div className="friendItem-icon-name">
                     <img src={ userIcon } alt="Profile icon" />
-                    <h3>{ props.user.name }</h3>
+                    <h3>{ props.user.username }</h3>
                 </div>
             </Link>
 
@@ -22,12 +22,12 @@ const FriendItem = props => {
 
                 <div className="posts-friends">
                     <img src={ commentIcon } alt="post icon"/>
-                    <p>{ props.user.numberOfPosts } Posts</p>
+                    <p>{ props.user.posts.length } Posts</p>
                 </div>
 
                 <div className="posts-friends">
                     <img src={ userIcon } alt="user icon"/>
-                    <p>{ props.user.numberOfFriends } Friends</p>
+                    <p>{ props.user.friends.length } Friends</p>
                 </div>
 
             </div>

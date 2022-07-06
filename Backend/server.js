@@ -2,6 +2,7 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const MongoClient = require("mongodb").MongoClient
 const mongoose = require("mongoose")
+const User = require("./models/users-model")
 
 // FOR CONNECTING TO MONGODB SERVER
 const password = "CdsiLNos7MAaIdiu"
@@ -40,6 +41,25 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE")
     
     next()
+})
+
+// HOME PAGE ROUTE
+// need to change information sent to frontend
+app.get("/", async (req, res, next) => {
+    let users
+
+    try {
+        users = await User.find({}, "-password")
+    } catch(err) {
+        const error = new HttpError(
+            "Fetching users failed, please try again!", 500
+        )
+
+        return next(error)
+    }
+
+    // console.log(users)
+    res.json({ users: users.map( user => user.toObject({ getters: true })) })
 })
 
 app.use("/auth", authRoutes)
