@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { AuthContext } from "../../Context/auth-context";
 import LoadingSpinner from "../../Components/UI/LoadingSpinner"
 import ErrorModal from "../../Components/UI/ErrorModal";
+import { useFetch } from "../../Hooks/http-hook";
 
 import "./Auth.css"
 
@@ -21,8 +22,8 @@ const Auth = () => {
     const authContext = useContext(AuthContext)
 
     const [ isLoggingIn, setIsLoggingIn ] = useState(true)
-    const [ isLoading, setIsLoading ] = useState(false)
-    const [ error, setError ] = useState()
+    
+    const { isLoading, hasError, sendRequest, clearError } = useFetch()
 
     // STATES FOR LOGIN/SIGNUP FORM INPUTS TO TRACK VALUES
     const [ enteredUsername, setEnteredUsername ] = useState("")
@@ -180,78 +181,102 @@ const Auth = () => {
 
         if (isLoggingIn) {
 
-            // set loading state to true so spinner shows up
-            setIsLoading(true)
+            // CODE BLOCK MADE BEFORE useFetch HOOK
+            // // set loading state to true so spinner shows up
+            // setIsLoading(true)
 
-            try{
-                // LOGIN FETCH FUNCTION
-                const response = await fetch('http://localhost:5000/auth/login', {
-                    method: "POST",
-                    headers: {
+            // try{
+            //     // LOGIN FETCH FUNCTION
+            //     const response = await fetch('http://localhost:5000/auth/login', {
+            //         method: "POST",
+            //         headers: {
+            //             'Content-Type': "application/json"
+            //         },
+            //         // .STRINGIFY() CONVERTS BODY DATA INTO JSON FOR BACKEND TO USE
+            //         body: JSON.stringify({
+            //             email: enteredEmail,
+            //             password: enteredPassword
+            //         })
+            //     })
+
+            //     // .JSON() TURNS THE RESPONSE INTO JSON DATA
+            //     const responseData = await response.json()
+            //     console.log(responseData)
+
+            //     // checks to see if the code associated with the response is 200ish. If not, we need to go to the catch block. Doesn't happen on its own because a 400 or 500ish response code is still considered a response, not an error
+            //     if (!response.ok) {
+            //         throw new Error(responseData.message)
+            //     }
+
+            //     // LOGS IN AND REDIRECTS USER TO THEIR HOME PAGE
+            //     authContext.login()
+
+            // } catch(err) {
+            //     console.log(err)
+            //     setError(err.message || "Something went wrong. Please try logging in again!")
+            // }
+            //
+
+            let placeholder
+            
+            try {
+                await sendRequest(
+                    // URL
+                    'http://localhost:5000/auth/login',
+                    // METHOD
+                    "POST",
+                    // HEADERS
+                    {
                         'Content-Type': "application/json"
                     },
-                    // .STRINGIFY() CONVERTS BODY DATA INTO JSON FOR BACKEND TO USE
-                    body: JSON.stringify({
+                    // BODY
+                    JSON.stringify({
                         email: enteredEmail,
                         password: enteredPassword
                     })
-                })
+                )
 
-                // .JSON() TURNS THE RESPONSE INTO JSON DATA
-                const responseData = await response.json()
-                console.log(responseData)
-
-                // checks to see if the code associated with the response is 200ish. If not, we need to go to the catch block. Doesn't happen on its own because a 400 or 500ish response code is still considered a response, not an error
-                if (!response.ok) {
-                    throw new Error(responseData.message)
-                }
-
-                // LOGS IN AND REDIRECTS USER TO THEIR HOME PAGE
                 authContext.login()
-
-            } catch(err) {
-                console.log(err)
-                setError(err.message || "Something went wrong. Please try logging in again!")
+            } catch (err) {
+                // empty because error handling is done in our hook
             }
+
 
         } else {
 
             try {
                 
-                const response = await fetch('http://localhost:5000/auth/signup', {
-                    method: "POST",
-                    headers: {
+                await sendRequest(
+                    // URL
+                    'http://localhost:5000/auth/signup',
+                    // METHOD
+                    "POST",
+                    // HEADERS
+                    {
                         'Content-Type': "application/json"
                     },
-                    body: JSON.stringify({
+                    // BODY
+                    JSON.stringify({
                         username: enteredUsername,
                         email: enteredEmail,
                         password: enteredPassword
                     })
-                })
+                )
 
-                const responseData = await response.json()
-                console.log(responseData)
-
-                // checks to see if the code associated with the response is 200ish. If not, we need to go to the catch block. Doesn't happen on its own because a 400 or 500ish response code is still considered a response, not an error
-                if (!response.ok) {
-                    throw new Error(responseData.message)
-                }
 
                 authContext.login()
             } catch (err) {
-                console.log(err)
-                setError(err.message || "Something went wrong. Please try signing up again!")
+                // empty because error handling is done in our hook
             }
         }
         
-        setIsLoading(false)
+        
         resetFormHandler()
     }
 
     return (
         <React.Fragment>
-            { error && <ErrorModal error = { error } onClear = { () => setError(null) } />}
+            { hasError && <ErrorModal error = { hasError } onClear = { clearError } />}
             <div>
                 { isLoading && <LoadingSpinner asOverlay />}
 
