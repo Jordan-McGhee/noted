@@ -9,6 +9,7 @@ import LoadingSpinner from "../../../Components/UI/LoadingSpinner";
 import ErrorModal from "../../../Components/UI/ErrorModal";
 import { useFetch } from "../../../Hooks/http-hook"
 
+
 const HomePage = () => {
 
     const { isLoading, hasError, sendRequest, clearError } = useFetch()
@@ -16,16 +17,20 @@ const HomePage = () => {
 
     // update this one when backend route is fixed
     const [ loadedUsers, setLoadedUsers ] = useState()
+    const [ loadedPosts, setLoadedPosts ] = useState()
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
                 const responseData = await sendRequest(
                     // URL
-                    'http://localhost:5000/'
+                    'http://localhost:5000/',
                 )
 
                 setLoadedUsers(responseData.users)
+                setLoadedPosts(responseData.posts)
+
+                console.log(loadedPosts)
 
             } catch(err) {
                 // empty because it's handled in useFetch hook
@@ -89,7 +94,9 @@ const HomePage = () => {
 
                 <div className='app-posts-section'>
                     <NewPost />
-                    <PostList items={ DUMMY_POSTS_HOME.reverse() } isProfilePosts = { false } />
+                    { !isLoading && loadedPosts &&
+                        <PostList items={ loadedPosts.reverse() } isProfilePosts = { false } />
+                    }
                 </div>
 
                 <div className='vertical-line'></div>

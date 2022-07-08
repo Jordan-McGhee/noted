@@ -35,7 +35,7 @@ const PostItem = props => {
             <img src={ userIcon } alt="user icon" />
 
             <div className="user-info">
-                <h3>{ props.user.name }</h3>
+                <h3>{ props.user.username }</h3>
                 <p>{ props.date }</p>
             </div>
 
@@ -48,8 +48,9 @@ const PostItem = props => {
                 <img src={ userIcon } alt="user icon" />
 
                 <div className="user-info">
-                    <Link to={`/user/${props.user.userID}`}>
-                        <h3>{ props.user.name }</h3>
+                    <Link to={`/user/${props.user.username}`}>
+                        <h3>{ props.user }</h3>
+                        <h3>Something should be here</h3>
                     </Link>
                     <p>{ props.date }</p>
                 </div>

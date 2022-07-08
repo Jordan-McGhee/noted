@@ -3,6 +3,7 @@ const bodyParser = require("body-parser")
 const MongoClient = require("mongodb").MongoClient
 const mongoose = require("mongoose")
 const User = require("./models/users-model")
+const Post = require("./models/posts-model")
 
 // FOR CONNECTING TO MONGODB SERVER
 const password = "CdsiLNos7MAaIdiu"
@@ -47,9 +48,13 @@ app.use((req, res, next) => {
 // need to change information sent to frontend
 app.get("/", async (req, res, next) => {
     let users
+    let posts
 
     try {
         users = await User.find({}, "-password")
+        posts = await Post.find({})
+        // console.log(users)
+        console.log(posts)
     } catch(err) {
         const error = new HttpError(
             "Fetching users failed, please try again!", 500
@@ -59,7 +64,10 @@ app.get("/", async (req, res, next) => {
     }
 
     // console.log(users)
-    res.json({ users: users.map( user => user.toObject({ getters: true })) })
+    res.json({
+        users: users.map( user => user.toObject({ getters: true })),
+        posts: posts.map( post => post.toObject({ getters: true }))
+    })
 })
 
 app.use("/auth", authRoutes)

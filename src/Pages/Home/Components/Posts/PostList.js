@@ -8,12 +8,12 @@ const PostList = props => {
         <ul className='post-list'>
             { props.items.map((item) => (
                 <PostItem
-                    key={ item.postID }
-                    user={ item.user }
+                    key={ item._id }
+                    user={ item.postCreator }
                     content={ item.content }
                     date={ item.date }
                     profilePost={ props.isProfilePosts }
-                    comments={item.comments ? item.comments : 0}
+                    comments={item.comments.length > 0 ? item.comments : 0}
                 />
             ))}
         </ul>
