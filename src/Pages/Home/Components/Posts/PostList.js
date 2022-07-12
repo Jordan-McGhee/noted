@@ -13,7 +13,7 @@ const PostList = props => {
                     content={ item.content }
                     date={ item.date }
                     profilePost={ props.isProfilePosts }
-                    comments={item.comments.length > 0 ? item.comments : 0}
+                    comments={item.comments > 0 ? item.comments : 0}
                 />
             ))}
         </ul>
